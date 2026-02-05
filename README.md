@@ -34,3 +34,16 @@ utilise Netlify CLI (`netlify dev`).
 - Styles : `assets/styles.css`
 
 Pense à remplacer le domaine `https://online-affiliate.com/` (OpenGraph + `sitemap.xml`) si tu déploies sur une autre URL.
+
+## IndexNow
+
+Le projet inclut une clé IndexNow (fichier texte à la racine) pour accélérer l’indexation.
+
+- Fichier de clé : `bef69f2e6ba224ca95862baa7b49f775.txt`
+- URL attendue après déploiement : `https://online-affiliate.com/bef69f2e6ba224ca95862baa7b49f775.txt`
+
+Soumettre toutes les URLs du `sitemap.xml` à IndexNow (Bing) :
+
+```bash
+npm run indexnow:submit
+```
