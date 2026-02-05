@@ -731,12 +731,34 @@ function setupCheckout() {
 
     try {
       const checkoutOrder = {
+        createdAt: order?.createdAt || "",
         customer: {
-          email: String(order?.customer?.email || "").trim(),
+          firstName: String(order?.customer?.firstName || "").trim(),
+          lastName: String(order?.customer?.lastName || "").trim(),
           name: String(order?.customer?.name || "").trim(),
+          email: String(order?.customer?.email || "").trim(),
+          phone: String(order?.customer?.phone || "").trim(),
+          address: {
+            line1: String(order?.customer?.address?.line1 || "").trim(),
+            line2: String(order?.customer?.address?.line2 || "").trim(),
+            postalCode: String(order?.customer?.address?.postalCode || "").trim(),
+            city: String(order?.customer?.address?.city || "").trim(),
+            country: String(order?.customer?.address?.country || "").trim(),
+          },
+          birth: {
+            date: String(order?.customer?.birth?.date || "").trim(),
+            city: String(order?.customer?.birth?.city || "").trim(),
+            country: String(order?.customer?.birth?.country || "").trim(),
+          },
+          company: {
+            name: String(order?.customer?.company?.name || "").trim(),
+            siret: String(order?.customer?.company?.siret || "").trim(),
+          },
         },
         project: order?.project || {},
         config: order?.config || {},
+        totals: order?.totals || {},
+        recap: String(order?.recap || ""),
       };
 
       const res = await fetch("/.netlify/functions/create-checkout-session", {

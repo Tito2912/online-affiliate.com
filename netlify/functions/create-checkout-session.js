@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 function json(statusCode, body) {
   return {
     statusCode,
@@ -137,6 +139,41 @@ function calcTotals(order) {
   return { items, oneShot, monthly, langCount, langs };
 }
 
+function chunkString(input, size) {
+  const chunks = [];
+  for (let i = 0; i < input.length; i += size) {
+    chunks.push(input.slice(i, i + size));
+  }
+  return chunks;
+}
+
+function setOrderSnapshotMetadata(params, snapshot) {
+  const maxChunks = 40;
+  const chunkSize = 450;
+
+  function encode(obj) {
+    const json = JSON.stringify(obj);
+    const b64 = Buffer.from(json, "utf8").toString("base64");
+    return { b64, chunks: chunkString(b64, chunkSize) };
+  }
+
+  let encoded = encode(snapshot);
+  if (encoded.chunks.length > maxChunks) {
+    encoded = encode({ ...snapshot, recap: "" });
+  }
+
+  if (encoded.chunks.length > maxChunks) {
+    throw new Error("Commande trop volumineuse (metadata Stripe).");
+  }
+
+  params.set("metadata[order_v]", "1");
+  params.set("metadata[order_chunks]", String(encoded.chunks.length));
+  for (let i = 0; i < encoded.chunks.length; i += 1) {
+    const key = `metadata[order_b64_${String(i + 1).padStart(2, "0")}]`;
+    params.set(key, encoded.chunks[i]);
+  }
+}
+
 exports.handler = async (event) => {
   try {
     if (event.httpMethod !== "POST") return json(405, { error: "Method not allowed" });
@@ -178,6 +215,21 @@ exports.handler = async (event) => {
     params.set("metadata[langues]", langs.join(","));
     params.set("metadata[nombre_langues]", String(langCount));
     params.set("metadata[mensuel_selectionne]", String(monthly));
+
+    const orderId = crypto.randomUUID();
+    params.set("client_reference_id", orderId);
+    params.set("metadata[order_id]", orderId);
+
+    const orderSnapshot = {
+      createdAt: String(order?.createdAt || new Date().toISOString()),
+      customer: order?.customer || {},
+      project: order?.project || {},
+      config: order?.config || {},
+      totals: { oneShot, monthly },
+      recap: String(order?.recap || ""),
+    };
+
+    setOrderSnapshotMetadata(params, orderSnapshot);
 
     const resp = await fetch("https://api.stripe.com/v1/checkout/sessions", {
       method: "POST",

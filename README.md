@@ -30,7 +30,7 @@ utilise Netlify CLI (`netlify dev`).
 
 - Texte/sections : `index.html`
 - Prix/options du configurateur : `index.html` (attributs `data-price`, `data-unit-price`, valeurs des radios)
-- Logique du configurateur : `assets/app.js`
+- Logique du configurateur : `assets/main.js`
 - Styles : `assets/styles.css`
 
 Pense à remplacer le domaine `https://online-affiliate.com/` (OpenGraph + `sitemap.xml`) si tu déploies sur une autre URL.
@@ -67,7 +67,7 @@ Puis remplace `STRIPE_SECRET_KEY` par ta clé **test** (`sk_test_...`).
 2) Lance Netlify en local (pour les Functions) :
 
 ```bash
-npx netlify dev
+npm run netlify:dev
 ```
 
 3) Parcours complet :
@@ -77,4 +77,48 @@ npx netlify dev
 - Vérifie les redirections : `/merci/?session_id=...` et `/paiement/annule/`
 
 Note : l’envoi du formulaire Netlify (sur la page `merci`) est réellement visible dans le dashboard Netlify une fois déployé.
+## Webhook Stripe (commandes validées)
+
+Pour traiter les commandes **uniquement après paiement** (Google Sheet + notifications), on utilise un webhook Stripe :
+
+- URL (prod) : `https://online-affiliate.com/.netlify/functions/stripe-webhook`
+- Événement : `checkout.session.completed` (optionnel: `checkout.session.async_payment_succeeded`)
+
+À configurer :
+
+1) Stripe Dashboard → **Developers** → **Webhooks** → **Add endpoint**
+2) Ajoute l’URL ci‑dessus
+3) Copie le **Signing secret** et ajoute-le dans Netlify en variable d’env :
+   - `STRIPE_WEBHOOK_SECRET`
+
+Le webhook reconstruit le payload complet depuis la metadata Stripe (le configurateur envoie un snapshot de la commande à la création de la session Checkout).
+
+### Google Sheet
+
+Variables d’env Netlify à ajouter :
+- `GOOGLE_SHEETS_ID`
+- `GOOGLE_SHEETS_TAB` (ex: `Orders`)
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL`
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` (la clé privée du service account, avec les retours ligne en `\n`)
+
+Ensuite, partage ton Google Sheet au `GOOGLE_SERVICE_ACCOUNT_EMAIL` (permission **éditeur**).
+
+### Notifications
+
+Ajoute une URL de webhook (Discord/Slack/Make/Zapier) :
+- `ORDER_NOTIFICATION_WEBHOOK_URL`
+
+### Test en local
+
+- Lance le site + functions :
+
+```bash
+npm run netlify:dev
+```
+
+- Pour tester le webhook Stripe en local, le plus simple est d’utiliser Stripe CLI :
+
+```bash
+stripe listen --forward-to http://localhost:8888/.netlify/functions/stripe-webhook
+```
 
