@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Merci — commande confirmée</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body data-page="merci">
+    <div id="particles-js"></div>
+    <main class="section">
+      <div class="container">
+        <div class="cfg-card">
+          <p class="badge">Merci</p>
+          <h1 style="margin-top: 8px">Commande confirmée.</h1>
+          <p class="muted">
+            Paiement reçu. Tu vas recevoir un email de confirmation du prestataire de paiement. E-Com Shop te recontacte ensuite pour
+            l’onboarding (niche, domaine, accès et validations nécessaires).
+          </p>
+          <div class="divider"></div>
+          <a class="btn btn-primary" href="/">Retour au site</a>
+        </div>
+      </div>
+    </main>
+
+    <form name="commande" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="commande" />
+      <p hidden><label>Ne pas remplir&nbsp;: <input name="bot-field" /></label></p>
+    </form>
+  </body>
+</html>

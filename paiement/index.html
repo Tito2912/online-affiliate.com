@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Paiement — E-Com Shop</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content="Vérifie ton récap puis règle ta commande E-Com Shop via paiement sécurisé." />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <main id="contenu" class="section">
+      <div class="container">
+        <article class="cfg-card">
+          <p class="badge">Paiement sécurisé</p>
+          <h1 style="margin-top: 8px">Vérifie ton récap, puis paye.</h1>
+          <p class="muted">
+            Le paiement correspond au <strong>pack one-shot</strong> configuré. Si tu as choisi une option mensuelle, elle est mise en place
+            après commande (on te contactera).
+          </p>
+
+          <div class="divider"></div>
+
+          <div id="checkoutEmpty" hidden>
+            <p class="muted">Aucune commande détectée. Reviens au configurateur pour composer ton pack.</p>
+            <a class="btn btn-primary" href="/#configurateur">Aller au configurateur</a>
+          </div>
+
+          <div id="checkoutContent" hidden>
+            <h2 class="h3">Récapitulatif</h2>
+            <pre class="cfg-recap" id="checkoutRecap"></pre>
+
+            <div class="cfg-total" style="margin-top: 12px">
+              <div>
+                <div class="muted">À payer maintenant</div>
+                <div class="big" id="checkoutTotal">—</div>
+              </div>
+              <div>
+                <div class="muted">Mensuel (si choisi)</div>
+                <div class="big" id="checkoutMonthly">—</div>
+              </div>
+            </div>
+
+            <div class="cfg-actions" style="margin-top: 16px">
+              <button type="button" class="btn btn-primary btn-block" id="payBtn">Payer maintenant</button>
+              <a class="btn btn-ghost btn-block" href="/#configurateur">Modifier ma commande</a>
+            </div>
+
+            <p class="cfg-note">
+              Paiement traité par un prestataire (ex. Stripe). E-Com Shop ne stocke pas tes données de carte bancaire.
+            </p>
+            <p class="cfg-note">
+              Besoin d’un périmètre hors pack ? <a class="link" href="/contact/">Demande spéciale</a>.
+            </p>
+          </div>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

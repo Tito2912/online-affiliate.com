@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Politique de confidentialité — online-affiliate</title>
+    <meta name="description" content="Politique de confidentialité et informations RGPD de online-affiliate." />
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <main id="contenu" class="section">
+      <div class="container">
+        <article class="cfg-card">
+          <h1 style="margin-top: 0">Politique de confidentialité</h1>
+          <p class="muted">Dernière mise à jour : 1 février 2026.</p>
+	          <p class="muted">
+	            Cette page explique quelles données sont utilisées, pourquoi, et avec qui elles peuvent être partagées lorsqu’une
+	            <strong>commande</strong> est passée via le configurateur (puis paiement), puis lorsqu’une prestation est réalisée (création de
+	            comptes, achat de domaine, etc.).
+	          </p>
+	          <p class="muted">
+	            <strong>Information :</strong> cette politique peut évoluer (outils, durées, destinataires). La version applicable est celle
+	            publiée sur cette page.
+	          </p>
+
+          <div class="divider"></div>
+
+          <h2 class="h3" id="responsable">1) Responsable du traitement</h2>
+          <p class="muted">
+            Le responsable du traitement est : <strong>E-Com Shop</strong> (représentée par Tony Caron, Président).
+          </p>
+          <ul class="bullets">
+            <li><strong>Adresse :</strong> 60 rue François 1er, 75008 Paris, France</li>
+            <li><strong>Email :</strong> contact.ecomshopfrance@gmail.com</li>
+          </ul>
+
+          <h2 class="h3" id="donnees">2) Données traitées (ce qu’on peut utiliser)</h2>
+          <p class="muted">
+            Le configurateur contient un formulaire de commande. Les informations sont saisies dans ton navigateur. Au moment de démarrer le
+            paiement, une fonction Netlify crée une session de paiement et transmet à Stripe les informations nécessaires (ex. email, options,
+            montant, métadonnées limitées). Après confirmation du paiement, la page “Merci” transmet les détails de la commande à
+            <strong>E-Com Shop</strong> via un formulaire Netlify (formulaire <strong>“commande”</strong>) afin de lancer l’onboarding et les
+            démarches de mise en place.
+          </p>
+
+          <div class="table-wrap" role="region" aria-label="Tableau des données traitées" tabindex="0">
+            <table class="policy-table">
+              <thead>
+                <tr>
+                  <th>Donnée</th>
+                  <th>Exemples</th>
+                  <th>Pourquoi</th>
+                  <th>Destinataires possibles</th>
+                  <th>Conservation (indicatif)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Identité</td>
+                  <td>Nom, prénom</td>
+	                  <td>Traiter une commande, créer/configurer des comptes</td>
+	                  <td>E-Com Shop, Netlify (formulaire “commande”), Stripe (paiement), fournisseurs (si création de comptes)</td>
+                  <td>Leads : 12–24 mois · Clients : durée du contrat + archivage</td>
+                </tr>
+                <tr>
+                  <td>Coordonnées</td>
+                  <td>Email, téléphone (si requis)</td>
+	                  <td>Onboarding, récupération/2FA</td>
+	                  <td>E-Com Shop, Netlify (formulaire “commande”), Stripe (email), fournisseurs (Google, OVH, etc.)</td>
+                  <td>Idem</td>
+                </tr>
+                <tr>
+                  <td>Adresse</td>
+                  <td>Adresse postale</td>
+                  <td>Création de comptes, enregistrement de domaine</td>
+                  <td>E-Com Shop, Netlify (formulaire “commande”), OVH (domaine), fournisseurs demandant une adresse</td>
+                  <td>Selon obligation du fournisseur + archivage</td>
+                </tr>
+                <tr>
+                  <td>Date & lieu de naissance</td>
+                  <td>Date/ville/pays</td>
+                  <td>Si requis par un fournisseur (KYC/anti‑fraude)</td>
+                  <td>E-Com Shop, Netlify (formulaire “commande”), fournisseurs tiers (selon besoin)</td>
+                  <td>Minimisation : uniquement si nécessaire</td>
+                </tr>
+                <tr>
+                  <td>Entreprise (si applicable)</td>
+                  <td>Raison sociale, SIRET</td>
+                  <td>Création de comptes pro, enregistrement de domaine, facturation (si applicable)</td>
+                  <td>E-Com Shop, Netlify (formulaire “commande”), OVH et/ou fournisseurs concernés</td>
+                  <td>Durée du contrat + obligations légales (si facturation)</td>
+                </tr>
+                <tr>
+                  <td>KYC / justificatifs</td>
+                  <td>Pièce d’identité, justificatif de domicile (rare)</td>
+                  <td>Vérification/validation par un fournisseur</td>
+                  <td>Fournisseur concerné (saisie/téléversement direct)</td>
+	                  <td>Préférence : non collecté par E-Com Shop</td>
+                </tr>
+	                <tr>
+	                  <td>Données de paiement</td>
+	                  <td>Carte bancaire</td>
+	                  <td>Paiement</td>
+	                  <td>Stripe (paiement) — E-Com Shop ne reçoit pas les données de carte</td>
+	                  <td>Selon la politique de Stripe</td>
+	                </tr>
+                <tr>
+                  <td>Informations projet</td>
+                  <td>Niche, options, totaux, délai estimé</td>
+	                  <td>Traiter la commande, cadrer le périmètre, préparer l’onboarding</td>
+	                  <td>E-Com Shop, Netlify (fonctions + formulaire “commande”), Stripe (métadonnées limitées)</td>
+                  <td>Leads : 12–24 mois</td>
+                </tr>
+                <tr>
+                  <td>Données techniques</td>
+                  <td>IP/logs (selon hébergeur)</td>
+                  <td>Sécurité, anti-spam, diagnostics</td>
+                  <td>Netlify / hébergeur</td>
+                  <td>Selon politiques de l’hébergeur</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="muted">
+	            <strong>Important :</strong> E-Com Shop peut réaliser ces démarches pour ton compte quand tu l’as autorisé. Certains fournisseurs
+            imposent toutefois une validation directe (ex. KYC, documents, code SMS). Les mots de passe ne doivent pas être envoyés par email :
+            on privilégie les invitations, le “reset” et/ou un gestionnaire sécurisé.
+          </p>
+          <p class="muted">
+	            <strong>Carte bancaire :</strong> E-Com Shop ne demande pas et ne stocke pas tes données de paiement. Le <strong>nom de domaine</strong>
+	            est acheté par E-Com Shop (inclus dans le pack) et enregistré au nom du client. Pour tout outil payant optionnel, un paiement
+	            direct chez le fournisseur ou une refacturation peut être proposée selon accord.
+	          </p>
+
+	          <h2 class="h3" id="finalite">3) Finalités (pourquoi on traite ces données)</h2>
+	          <ul class="bullets">
+	            <li>Traiter ta commande et te contacter si besoin</li>
+	            <li>Mettre en place la prestation (site, tracking, monétisation, contenu)</li>
+	            <li>Créer/configurer des comptes si tu l’as autorisé</li>
+	            <li>Acheter/enregistrer un domaine si tu l’as autorisé</li>
+	            <li>Sécuriser le service (anti‑spam, logs techniques) et prévenir la fraude</li>
+	          </ul>
+
+	          <h2 class="h3" id="base-legale">4) Base légale (RGPD)</h2>
+	          <ul class="bullets">
+	            <li><strong>Mesures précontractuelles</strong> : traitement d’une commande / demande spéciale</li>
+	            <li><strong>Exécution du contrat</strong> : réalisation de la prestation</li>
+	            <li><strong>Obligations légales</strong> : comptabilité/archivage si facturation</li>
+	            <li><strong>Intérêt légitime</strong> : sécurité, prévention abus/spam</li>
+	          </ul>
+
+          <h2 class="h3" id="destinataires">5) Destinataires (avec qui on peut partager)</h2>
+          <p class="muted">
+            Les données peuvent être accessibles aux prestataires nécessaires pour fournir le service, notamment :
+          </p>
+	          <ul class="bullets">
+	            <li><strong>Netlify</strong> : hébergement, fonctions serverless (paiement) et formulaires (réception de la commande)</li>
+	            <li><strong>Stripe</strong> : paiement en ligne (Checkout)</li>
+	            <li><strong>Google</strong> : Search Console / Analytics (si utilisé)</li>
+	            <li><strong>OVH</strong> : enregistrement de domaine (si choisi)</li>
+	            <li><strong>GitHub</strong>, <strong>Bing</strong> : selon configuration</li>
+	            <li><strong>Réseaux/programmes d’affiliation</strong> : selon choix du client</li>
+	          </ul>
+
+          <h2 class="h3" id="transferts">6) Transferts hors UE</h2>
+	          <p class="muted">
+	            Certains fournisseurs (ex. Netlify, Stripe, Google, GitHub) peuvent traiter des données en dehors de l’UE. Dans ce cas, les
+	            transferts sont encadrés par les mécanismes du fournisseur (clauses contractuelles types, décisions d’adéquation, etc.).
+	          </p>
+
+          <h2 class="h3" id="hebergement">7) Hébergement / traitement</h2>
+	          <p class="muted">
+	            Le configurateur fonctionne côté navigateur. Au moment de démarrer le paiement, une fonction Netlify crée une session de
+	            paiement et transmet à Stripe les informations nécessaires (ex. email, montant, métadonnées de commande limitées). Après
+	            confirmation du paiement, la page “Merci” transmet les détails de commande à E-Com Shop via un formulaire Netlify (formulaire
+	            “commande”). Les autres données peuvent être traitées chez les fournisseurs utilisés pour la prestation (Google/OVH/réseaux
+	            d’affiliation, etc.).
+	          </p>
+
+          <h2 class="h3" id="conservation">8) Durée de conservation</h2>
+          <p class="muted">
+            Les durées dépendent de ta relation (prospect vs client) et des obligations légales. Exemple indicatif :
+          </p>
+          <ul class="bullets">
+            <li>Prospects : 12–24 mois après le dernier contact</li>
+            <li>Clients : durée du contrat + archivage (ex. obligations comptables)</li>
+            <li>Données techniques : selon la politique de l’hébergeur</li>
+          </ul>
+
+          <h2 class="h3" id="securite">9) Sécurité</h2>
+          <ul class="bullets">
+            <li>Accès “minimum nécessaire” (rôles/permissions)</li>
+            <li>2FA quand disponible</li>
+            <li>Gestion d’accès via des outils adaptés (vault) plutôt que par email</li>
+            <li>Minimisation : on demande uniquement ce qui est nécessaire</li>
+          </ul>
+
+          <h2 class="h3" id="droits">10) Tes droits</h2>
+          <p class="muted">
+            Tu peux demander l’accès, la rectification ou la suppression de tes données : <strong>contact.ecomshopfrance@gmail.com</strong>.
+            Si tu es dans l’UE, tu peux aussi introduire une réclamation auprès de l’autorité de contrôle compétente (ex. CNIL en France).
+          </p>
+
+          <h2 class="h3" id="cookies">11) Cookies</h2>
+          <p class="muted">
+            Le site n’installe pas volontairement de cookies marketing. Certains services tiers (hébergement, analytics si activé) peuvent
+            déposer des traceurs selon leur configuration.
+          </p>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>
