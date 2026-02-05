@@ -7,8 +7,31 @@ function json(statusCode, body) {
 }
 
 function getBaseUrl(headers) {
-  const proto = headers["x-forwarded-proto"] || "https";
-  const host = headers["x-forwarded-host"] || headers.host;
+  const host = headers["x-forwarded-host"] || headers.host || "";
+
+  const envUrl =
+    process.env.URL ||
+    process.env.DEPLOY_PRIME_URL ||
+    process.env.DEPLOY_URL ||
+    process.env.SITE_URL ||
+    "";
+
+  if (envUrl) {
+    try {
+      const u = new URL(envUrl);
+      if (!host || u.host === host) return u.origin;
+    } catch {
+      // ignore invalid env
+    }
+  }
+
+  const forwardedProto = headers["x-forwarded-proto"];
+  const isLocal =
+    host.includes("localhost") ||
+    host.startsWith("127.0.0.1") ||
+    host.startsWith("0.0.0.0");
+  const proto = forwardedProto || (isLocal ? "http" : "https");
+
   return `${proto}://${host}`;
 }
 

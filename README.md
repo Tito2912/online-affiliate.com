@@ -53,3 +53,28 @@ Astuce : si tu as plusieurs fichiers de clé `*.txt` à la racine, le script cho
 ```bash
 INDEXNOW_KEY_FILE=bef69f2e6ba224ca95862baa7b49f775.txt npm run indexnow:submit
 ```
+
+## Test paiement (Stripe)
+
+1) Crée un fichier `.env` à la racine (ne pas committer) :
+
+```bash
+cp .env.example .env
+```
+
+Puis remplace `STRIPE_SECRET_KEY` par ta clé **test** (`sk_test_...`).
+
+2) Lance Netlify en local (pour les Functions) :
+
+```bash
+npx netlify dev
+```
+
+3) Parcours complet :
+- `http://localhost:8888/` → compose un pack → valider → aller sur `/paiement/`
+- Clique “Procéder au paiement” → Stripe Checkout (test)
+- Carte test Stripe : `4242 4242 4242 4242` / date future / CVC `123`
+- Vérifie les redirections : `/merci/?session_id=...` et `/paiement/annule/`
+
+Note : l’envoi du formulaire Netlify (sur la page `merci`) est réellement visible dans le dashboard Netlify une fois déployé.
+
