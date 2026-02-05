@@ -47,3 +47,9 @@ Soumettre toutes les URLs du `sitemap.xml` à IndexNow (Bing) :
 ```bash
 npm run indexnow:submit
 ```
+
+Astuce : si tu as plusieurs fichiers de clé `*.txt` à la racine, le script choisit automatiquement la clé la plus récente. Tu peux forcer une clé avec :
+
+```bash
+INDEXNOW_KEY_FILE=bef69f2e6ba224ca95862baa7b49f775.txt npm run indexnow:submit
+```

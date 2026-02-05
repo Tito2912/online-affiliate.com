@@ -1,12 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 
-function findIndexNowKeyFile(rootDir) {
+function listIndexNowKeyFiles(rootDir) {
   const entries = fs.readdirSync(rootDir, { withFileTypes: true });
-  const keyFiles = entries
+  return entries
     .filter((e) => e.isFile() && /^[a-f0-9]{32}\.txt$/i.test(e.name))
-    .map((e) => e.name)
-    .sort();
+    .map((e) => e.name);
+}
+
+function pickKeyFile(rootDir, keyFiles) {
+  const preferred = process.env.INDEXNOW_KEY_FILE;
+  if (preferred) {
+    if (!keyFiles.includes(preferred)) {
+      throw new Error(
+        `INDEXNOW_KEY_FILE est défini mais introuvable à la racine: ${preferred}`
+      );
+    }
+    return preferred;
+  }
 
   if (keyFiles.length === 0) {
     throw new Error(
@@ -14,13 +25,22 @@ function findIndexNowKeyFile(rootDir) {
     );
   }
 
-  if (keyFiles.length > 1) {
-    throw new Error(
-      `Plusieurs clés IndexNow trouvées: ${keyFiles.join(", ")}. Garde-en une seule à la racine.`
-    );
-  }
+  if (keyFiles.length === 1) return keyFiles[0];
 
-  return keyFiles[0];
+  const byMtimeDesc = keyFiles
+    .map((name) => ({
+      name,
+      mtimeMs: fs.statSync(path.join(rootDir, name)).mtimeMs,
+    }))
+    .sort((a, b) => b.mtimeMs - a.mtimeMs);
+
+  const chosen = byMtimeDesc[0].name;
+  console.warn(
+    `Plusieurs clés IndexNow trouvées (${keyFiles.join(
+      ", "
+    )}). Utilisation automatique de la plus récente: ${chosen}. (Ou définis INDEXNOW_KEY_FILE)`
+  );
+  return chosen;
 }
 
 function readText(filePath) {
@@ -45,8 +65,8 @@ function getHostFromUrls(urls) {
     try {
       return new URL(urlString).host;
     } catch {
-    
-  }
+      
+    }
   }
   throw new Error("Impossible de déduire le host à partir du sitemap.xml");
 }
@@ -81,7 +101,8 @@ async function main() {
     throw new Error("sitemap.xml introuvable à la racine du projet");
   }
 
-  const keyFileName = findIndexNowKeyFile(root);
+  const keyFiles = listIndexNowKeyFiles(root);
+  const keyFileName = pickKeyFile(root, keyFiles);
   const keyFilePath = path.join(root, keyFileName);
   const key = readText(keyFilePath);
 
