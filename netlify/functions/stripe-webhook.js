@@ -235,7 +235,7 @@ async function ensureSheetHeader({ sheetId, sheetName, accessToken, header }) {
   });
 }
 
-async function sheetHasSessionId({ sheetId, sheetName, accessToken, sessionId }) {
+async function findSessionRowIndex({ sheetId, sheetName, accessToken, sessionId }) {
   const col = await sheetsRequest({
     method: "GET",
     sheetId,
@@ -246,16 +246,50 @@ async function sheetHasSessionId({ sheetId, sheetName, accessToken, sessionId })
   const values = Array.isArray(col?.values) ? col.values : [];
   for (let i = 0; i < values.length; i += 1) {
     const v = Array.isArray(values[i]) ? String(values[i][0] || "") : "";
-    if (v === sessionId) return true;
+    if (v === sessionId) return i + 1; // 1-based row index
   }
-  return false;
+  return 0;
+}
+
+async function getSheetCellValue({ sheetId, accessToken, a1Range }) {
+  const data = await sheetsRequest({
+    method: "GET",
+    sheetId,
+    range: a1Range,
+    accessToken,
+  });
+
+  const values = Array.isArray(data?.values) ? data.values : [];
+  return values?.[0]?.[0] ? String(values[0][0]) : "";
+}
+
+async function updateSheetCell({ sheetId, accessToken, a1Range, value }) {
+  await sheetsRequest({
+    method: "PUT",
+    sheetId,
+    range: a1Range,
+    accessToken,
+    query: "valueInputOption=RAW",
+    body: {
+      range: a1Range,
+      majorDimension: "ROWS",
+      values: [[value]],
+    },
+  });
+}
+
+function parseRowIndexFromUpdatedRange(updatedRange) {
+  const m = String(updatedRange || "").match(/![A-Z]+(\d+):/);
+  if (!m) return 0;
+  const n = Number.parseInt(m[1], 10);
+  return Number.isFinite(n) ? n : 0;
 }
 
 async function appendSheetRow({ sheetId, sheetName, accessToken, row }) {
   const endCol = colToA1(row.length);
   const range = `${sheetName}!A:${endCol}`;
 
-  await sheetsRequest({
+  return sheetsRequest({
     method: "POST",
     sheetId,
     range: `${range}:append`,
@@ -370,7 +404,13 @@ exports.handler = async (event) => {
     const googleEmail = String(process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || "").trim();
     const googleKey = String(process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || "").trim();
 
-    const shouldUseSheets = Boolean(sheetId && sheetName && googleEmail && googleKey);
+    const wantsSheetsConfig = Boolean(sheetId || googleEmail || googleKey);
+    const sheetsReady = Boolean(sheetId && sheetName && googleEmail && googleKey);
+    if (wantsSheetsConfig && !sheetsReady) {
+      throw new Error(
+        "Google Sheets: variables d’environnement incomplètes (GOOGLE_SHEETS_ID/TAB + GOOGLE_SERVICE_ACCOUNT_EMAIL/PRIVATE_KEY)."
+      );
+    }
 
     const dashboardUrl = getStripeDashboardUrl({
       livemode: Boolean(session.livemode),
@@ -424,7 +464,10 @@ exports.handler = async (event) => {
       "order_json",
       "stripe_dashboard_url",
       "received_at",
+      "notification_sent_at",
     ];
+
+    const receivedAt = new Date().toISOString();
 
     const row = [
       sessionId,
@@ -462,31 +505,9 @@ exports.handler = async (event) => {
       safeJson(order?.config || {}),
       safeJson(order || null),
       dashboardUrl,
-      new Date().toISOString(),
+      receivedAt,
+      "", // notification_sent_at
     ];
-
-    if (shouldUseSheets) {
-      const accessToken = await getGoogleAccessToken({
-        clientEmail: googleEmail,
-        privateKey: googleKey,
-        scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-      });
-
-      const autoHeader = String(process.env.GOOGLE_SHEETS_AUTO_HEADER || "true").toLowerCase() !== "false";
-      if (autoHeader) {
-        await ensureSheetHeader({ sheetId, sheetName, accessToken, header });
-      }
-
-      const dedupe = String(process.env.GOOGLE_SHEETS_DEDUP || "true").toLowerCase() !== "false";
-      if (dedupe) {
-        const exists = await sheetHasSessionId({ sheetId, sheetName, accessToken, sessionId });
-        if (exists) {
-          return json(200, { received: true, deduped: true, session_id: sessionId });
-        }
-      }
-
-      await appendSheetRow({ sheetId, sheetName, accessToken, row });
-    }
 
     const label = session.livemode ? "LIVE" : "TEST";
     const amountLabel = moneyFromCents(session.amount_total, session.currency);
@@ -502,8 +523,63 @@ exports.handler = async (event) => {
       checksSelected ? `Options: ${checksSelected}` : "",
       `Stripe: ${dashboardUrl}`,
     ].filter(Boolean);
+    const message = msgLines.join("\n");
 
-    await sendNotification({ session, order, message: msgLines.join("\n") });
+    const notificationUrlConfigured = Boolean(String(process.env.ORDER_NOTIFICATION_WEBHOOK_URL || "").trim());
+
+    let accessToken = "";
+    let rowIndex = 0;
+    const notificationCol = colToA1(header.length); // last column
+
+    if (sheetsReady) {
+      accessToken = await getGoogleAccessToken({
+        clientEmail: googleEmail,
+        privateKey: googleKey,
+        scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+      });
+
+      const autoHeader = String(process.env.GOOGLE_SHEETS_AUTO_HEADER || "true").toLowerCase() !== "false";
+      if (autoHeader) {
+        await ensureSheetHeader({ sheetId, sheetName, accessToken, header });
+      }
+
+      const dedupe = String(process.env.GOOGLE_SHEETS_DEDUP || "true").toLowerCase() !== "false";
+      if (dedupe) {
+        rowIndex = await findSessionRowIndex({ sheetId, sheetName, accessToken, sessionId });
+      }
+
+      if (!rowIndex) {
+        const appendRes = await appendSheetRow({ sheetId, sheetName, accessToken, row });
+        const updatedRange = appendRes?.updates?.updatedRange;
+        rowIndex = parseRowIndexFromUpdatedRange(updatedRange);
+      }
+    }
+
+    // Notification: idempotent when Sheets is enabled (stored in notification_sent_at).
+    if (notificationUrlConfigured) {
+      let alreadyNotified = false;
+
+      if (sheetsReady && rowIndex) {
+        const a1 = `${sheetName}!${notificationCol}${rowIndex}`;
+        const current = await getSheetCellValue({ sheetId, accessToken, a1Range: a1 });
+        alreadyNotified = Boolean(String(current || "").trim());
+      }
+
+      if (!alreadyNotified) {
+        try {
+          await sendNotification({ session, order, message });
+          if (sheetsReady && rowIndex) {
+            const a1 = `${sheetName}!${notificationCol}${rowIndex}`;
+            await updateSheetCell({ sheetId, accessToken, a1Range: a1, value: new Date().toISOString() });
+          }
+        } catch (err) {
+          // Ne bloque pas le webhook Stripe sur une notification.
+          // La commande est quand même enregistrée dans le Sheet si configuré.
+          // eslint-disable-next-line no-console
+          console.error(err?.stack || String(err));
+        }
+      }
+    }
 
     return json(200, { received: true, ok: true, session_id: sessionId });
   } catch (err) {
