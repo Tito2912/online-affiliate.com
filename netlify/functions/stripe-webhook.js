@@ -183,9 +183,12 @@ function colToA1(colIndex1) {
   return s;
 }
 
-async function sheetsRequest({ method, sheetId, range, accessToken, query, body }) {
+async function sheetsRequest({ method, sheetId, range, accessToken, query, body, action }) {
   const base = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(sheetId)}/values/${encodeURIComponent(range)}`;
-  const url = query ? `${base}?${query}` : base;
+  // IMPORTANT: Google APIs use `:{action}` in the *path* (e.g. `.../values/{range}:append`).
+  // The `:` before the action MUST NOT be URL-encoded.
+  const withAction = action ? `${base}:${action}` : base;
+  const url = query ? `${withAction}?${query}` : withAction;
 
   const res = await fetch(url, {
     method,
@@ -310,10 +313,11 @@ async function appendSheetRow({ sheetId, sheetName, accessToken, row }) {
   return sheetsRequest({
     method: "POST",
     sheetId,
-    range: `${range}:append`,
+    range,
+    action: "append",
     accessToken,
     query: "valueInputOption=RAW&insertDataOption=INSERT_ROWS",
-    body: { values: [row] },
+    body: { majorDimension: "ROWS", values: [row] },
   });
 }
 
