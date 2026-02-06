@@ -18,5 +18,12 @@ Thumbs.db
 .env.*
 !.env.example
 
+# Secrets (Google Service Account key file)
+google-service-account.json
+online-affiliate-486605-08572b3a20fa.json
+*service-account*.json
+*service_account*.json
+*credentials*.json
+
 # Local Netlify folder
 .netlify

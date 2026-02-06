@@ -8,6 +8,7 @@
     "build": "vite build",
     "indexnow:submit": "node scripts/indexnow-submit.mjs",
     "netlify:dev": "node scripts/netlify-dev.mjs",
+    "sheets:create": "node scripts/create-google-sheet.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
