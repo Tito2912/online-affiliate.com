@@ -335,6 +335,19 @@ function safeJson(value) {
   }
 }
 
+function eurFromCents(amountTotal, currency) {
+  const cents = Number(amountTotal ?? NaN);
+  if (!Number.isFinite(cents)) return "";
+
+  const cur = String(currency || "").toLowerCase();
+  // Stripe provides `amount_total` in the smallest currency unit.
+  // For EUR it's cents, so convert to euros for the sheet.
+  // (If you ever switch currency, adjust this.)
+  if (cur && cur !== "eur") return cents;
+
+  return Number((cents / 100).toFixed(2));
+}
+
 function moneyFromCents(amountTotal, currency) {
   const cents = Number(amountTotal || 0);
   const cur = String(currency || "").toUpperCase();
@@ -496,8 +509,8 @@ exports.handler = async (event) => {
       String(session.payment_intent || ""),
       String(Boolean(session.livemode)),
       String(session.payment_status || ""),
-      String(session.amount_total ?? ""),
-      String(session.currency || ""),
+      eurFromCents(session.amount_total, session.currency),
+      String(session.currency || "").toUpperCase(),
       String(order?.createdAt || ""),
       String(order?.customer?.firstName || ""),
       String(order?.customer?.lastName || ""),
