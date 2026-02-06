@@ -196,10 +196,28 @@ async function sheetsRequest({ method, sheetId, range, accessToken, query, body 
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  const data = await res.json().catch(() => ({}));
+  const text = await res.text().catch(() => "");
+  let data = {};
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    data = {};
+  }
+
   if (!res.ok) {
-    const msg = data?.error?.message || "Google Sheets API error";
-    throw new Error(`Google Sheets: ${msg}`);
+    const code = data?.error?.code || res.status;
+    const msg =
+      data?.error?.message ||
+      data?.error?.status ||
+      (text ? text.slice(0, 500) : "") ||
+      res.statusText ||
+      "Google Sheets API error";
+
+    let hint = "";
+    if (code === 403) hint = " (vérifie le partage du Sheet au service account + l’API Sheets activée)";
+    if (code === 404) hint = " (vérifie GOOGLE_SHEETS_ID)";
+
+    throw new Error(`Google Sheets API (${res.status}) ${method} ${range}: ${msg}${hint}`);
   }
 
   return data;
