@@ -76,10 +76,6 @@ function setupConfigurator(root) {
   const monthlyEl = document.getElementById("cfgMonthly");
   const copyBtn = document.getElementById("cfgCopy");
 
-  const stickyBar = document.getElementById("cfgStickyBar");
-  const stickyTotalEl = document.getElementById("cfgStickyTotal");
-  const stickyPayBtn = document.getElementById("cfgStickyPay");
-
   const totalOneShotField = document.getElementById("totalOneShotField");
   const totalMonthlyField = document.getElementById("totalMonthlyField");
   const recapField = document.getElementById("recapField");
@@ -113,20 +109,6 @@ function setupConfigurator(root) {
   const nicheSelect = document.getElementById("nicheSelect");
   const nicheOtherWrap = document.getElementById("nicheOtherWrap");
   const nicheOtherInput = document.getElementById("nicheOther");
-
-  let stickyCfgInView = false;
-  let stickyAtSubmit = false;
-
-  function setStickyHidden(hidden) {
-    if (!stickyBar) return;
-    stickyBar.dataset.hidden = hidden ? "true" : "false";
-  }
-
-  function updateStickyVisibility() {
-    if (!stickyBar) return;
-    const show = stickyCfgInView && !stickyAtSubmit;
-    setStickyHidden(!show);
-  }
 
   function getCheckedCheckboxes() {
     return Array.from(root.querySelectorAll('input[type="checkbox"][data-price]'))
@@ -458,7 +440,6 @@ function setupConfigurator(root) {
     }
 
     if (totalEl) totalEl.textContent = totalOneShotText;
-    if (stickyTotalEl) stickyTotalEl.textContent = totalOneShotText;
     if (monthlyEl) monthlyEl.textContent = `${moneyEUR(monthly.price)} / mois`;
 
     if (totalOneShotField) totalOneShotField.value = String(totalOneShot);
@@ -505,37 +486,6 @@ function setupConfigurator(root) {
   nicheSelect?.addEventListener("change", updateNicheOtherVisibility);
   affExtraInput?.addEventListener("input", render);
   langCountInput?.addEventListener("input", render);
-
-  stickyPayBtn?.addEventListener("click", () => {
-    const target = root.querySelector(".cfg-summary") || submitBtn;
-    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-    const first = root.querySelector('input[name="prenom"]');
-    if (first) setTimeout(() => first.focus({ preventScroll: true }), 350);
-  });
-
-  if (stickyBar && "IntersectionObserver" in window) {
-    const cfgObserver = new IntersectionObserver(
-      (entries) => {
-        stickyCfgInView = entries.some((e) => e.isIntersecting);
-        updateStickyVisibility();
-      },
-      { threshold: 0.01 }
-    );
-    cfgObserver.observe(root);
-
-    if (submitBtn) {
-      const submitObserver = new IntersectionObserver(
-        (entries) => {
-          stickyAtSubmit = entries.some((e) => e.isIntersecting);
-          updateStickyVisibility();
-        },
-        { threshold: 0, rootMargin: "0px 0px 220px 0px" }
-      );
-      submitObserver.observe(submitBtn);
-    }
-  } else {
-    setStickyHidden(true);
-  }
 
   copyBtn?.addEventListener("click", async () => {
     try {
