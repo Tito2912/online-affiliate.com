@@ -76,6 +76,10 @@ function setupConfigurator(root) {
   const monthlyEl = document.getElementById("cfgMonthly");
   const copyBtn = document.getElementById("cfgCopy");
 
+  const stickyBar = document.getElementById("cfgStickyBar");
+  const stickyTotalEl = document.getElementById("cfgStickyTotal");
+  const stickyPayBtn = document.getElementById("cfgStickyPay");
+
   const totalOneShotField = document.getElementById("totalOneShotField");
   const totalMonthlyField = document.getElementById("totalMonthlyField");
   const recapField = document.getElementById("recapField");
@@ -109,6 +113,20 @@ function setupConfigurator(root) {
   const nicheSelect = document.getElementById("nicheSelect");
   const nicheOtherWrap = document.getElementById("nicheOtherWrap");
   const nicheOtherInput = document.getElementById("nicheOther");
+
+  let stickyCfgInView = false;
+  let stickyAtSubmit = false;
+
+  function setStickyHidden(hidden) {
+    if (!stickyBar) return;
+    stickyBar.dataset.hidden = hidden ? "true" : "false";
+  }
+
+  function updateStickyVisibility() {
+    if (!stickyBar) return;
+    const show = stickyCfgInView && !stickyAtSubmit;
+    setStickyHidden(!show);
+  }
 
   function getCheckedCheckboxes() {
     return Array.from(root.querySelectorAll('input[type="checkbox"][data-price]'))
@@ -426,6 +444,7 @@ function setupConfigurator(root) {
     const monthly = getMonthly();
 
     const totalOneShot = lines.reduce((sum, it) => sum + it.price, 0);
+    const totalOneShotText = moneyEUR(totalOneShot);
 
     if (linesEl) {
       linesEl.innerHTML =
@@ -438,7 +457,8 @@ function setupConfigurator(root) {
           .join("") || `<div class="muted">Aucune option sélectionnée.</div>`;
     }
 
-    if (totalEl) totalEl.textContent = moneyEUR(totalOneShot);
+    if (totalEl) totalEl.textContent = totalOneShotText;
+    if (stickyTotalEl) stickyTotalEl.textContent = totalOneShotText;
     if (monthlyEl) monthlyEl.textContent = `${moneyEUR(monthly.price)} / mois`;
 
     if (totalOneShotField) totalOneShotField.value = String(totalOneShot);
@@ -485,6 +505,37 @@ function setupConfigurator(root) {
   nicheSelect?.addEventListener("change", updateNicheOtherVisibility);
   affExtraInput?.addEventListener("input", render);
   langCountInput?.addEventListener("input", render);
+
+  stickyPayBtn?.addEventListener("click", () => {
+    const target = root.querySelector(".cfg-summary") || submitBtn;
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+    const first = root.querySelector('input[name="prenom"]');
+    if (first) setTimeout(() => first.focus({ preventScroll: true }), 350);
+  });
+
+  if (stickyBar && "IntersectionObserver" in window) {
+    const cfgObserver = new IntersectionObserver(
+      (entries) => {
+        stickyCfgInView = entries.some((e) => e.isIntersecting);
+        updateStickyVisibility();
+      },
+      { threshold: 0.01 }
+    );
+    cfgObserver.observe(root);
+
+    if (submitBtn) {
+      const submitObserver = new IntersectionObserver(
+        (entries) => {
+          stickyAtSubmit = entries.some((e) => e.isIntersecting);
+          updateStickyVisibility();
+        },
+        { threshold: 0, rootMargin: "0px 0px 220px 0px" }
+      );
+      submitObserver.observe(submitBtn);
+    }
+  } else {
+    setStickyHidden(true);
+  }
 
   copyBtn?.addEventListener("click", async () => {
     try {
@@ -882,9 +933,31 @@ function setupScrollAnimations() {
   document.body.classList.add("reveal-ready");
 }
 
+function setupResponsiveTables() {
+  const tables = document.querySelectorAll("table.niche-table, table.policy-table");
+  for (const table of tables) {
+    const headers = Array.from(table.querySelectorAll("thead th")).map((th) =>
+      String(th.textContent || "").replace(/\s+/g, " ").trim()
+    );
+    if (headers.length === 0) continue;
+
+    for (const row of table.querySelectorAll("tbody tr")) {
+      const cells = Array.from(row.querySelectorAll("td"));
+      for (let i = 0; i < cells.length; i++) {
+        const cell = cells[i];
+        if (cell.dataset.label) continue;
+        const header = headers[i] || "";
+        if (!header) continue;
+        cell.dataset.label = header;
+      }
+    }
+  }
+}
+
 function main() {
   setupNav();
   setupScrollAnimations();
+  setupResponsiveTables();
   setupHeroBackground();
 
   const root = document.getElementById("cfgForm");
