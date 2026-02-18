@@ -13,6 +13,7 @@ const headerHTML = `
       <a class="nav-link" href="/#configurateur">Commander</a>
       <a class="nav-link" href="/#process">Process</a>
       <a class="nav-link" href="/#faq">FAQ</a>
+      <a class="nav-link" href="/blog/">Blog</a>
       <a class="nav-link" href="/contact/">Contact</a>
       <a class="btn btn-primary" href="/#configurateur">Commander ton système</a>
     </nav>
@@ -28,6 +29,8 @@ const footerHTML = `
           <a class="link" href="/#configurateur">Commander</a>
           <span aria-hidden="true">·</span>
           <a class="link" href="/#faq">FAQ</a>
+          <span aria-hidden="true">·</span>
+          <a class="link" href="/blog/">Blog</a>
           <span aria-hidden="true">·</span>
           <a class="link" href="/contact/">Contact</a>
           <span aria-hidden="true">·</span>
@@ -68,8 +71,9 @@ export function injectLayout(currentPage = '/') {
   // Set active link
   const navLinks = document.querySelectorAll('.nav-link');
   navLinks.forEach(link => {
-    // Compare the link's href with the current page
-    if (link.getAttribute('href') === currentPage) {
+    const href = link.getAttribute('href') || '';
+    // Compare the link's href with the current page. Also mark parent sections active (e.g. /blog/ on /blog/...).
+    if (href === currentPage || (href.endsWith('/') && href !== '/' && currentPage.startsWith(href))) {
       link.classList.add('active');
     }
   });

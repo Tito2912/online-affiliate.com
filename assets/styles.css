@@ -807,6 +807,61 @@ h1 {
   margin-top: 0;
 }
 
+.prose {
+  max-width: 860px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.prose h1 {
+  font-size: 36px;
+  line-height: 1.12;
+}
+
+.prose h2 {
+  margin: 22px 0 10px;
+  font-size: 22px;
+  letter-spacing: -0.2px;
+}
+
+.prose h3 {
+  margin: 18px 0 8px;
+  font-size: 16px;
+}
+
+.prose p {
+  margin: 0 0 14px;
+}
+
+.prose ul,
+.prose ol {
+  margin: 0 0 14px;
+}
+
+.prose ul.bullets,
+.prose ol.bullets {
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.prose pre {
+  white-space: pre-wrap;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 12px;
+  margin: 0 0 14px;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 12.5px;
+  line-height: 1.45;
+  overflow: auto;
+}
+
+.prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 0.95em;
+}
+
 .cfg-row {
   display: flex;
   align-items: center;
