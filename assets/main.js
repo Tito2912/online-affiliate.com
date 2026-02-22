@@ -893,6 +893,110 @@ function setupScrollAnimations() {
   document.body.classList.add("reveal-ready");
 }
 
+function initialsFromName(name) {
+  const cleaned = String(name || "").replace(/\s+/g, " ").trim();
+  if (!cleaned) return "OA";
+
+  const parts = cleaned.match(/[A-Za-zÀ-ÿ0-9]+/g) || [];
+
+  const first = parts[0]?.[0] || "";
+  const second = parts[1]?.[0] || "";
+  const letters = `${first}${second}`.toUpperCase();
+  return letters.slice(0, 2) || cleaned.slice(0, 2).toUpperCase();
+}
+
+function normalizeTestimonialsPayload(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (payload && typeof payload === "object" && Array.isArray(payload.items)) return payload.items;
+  return [];
+}
+
+async function setupTestimonials() {
+  const empty = document.getElementById("testimonialsEmpty");
+  const grid = document.getElementById("testimonialsGrid");
+  if (!empty || !grid) return;
+
+  let items = [];
+  try {
+    const res = await fetch("/assets/testimonials.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    items = normalizeTestimonialsPayload(payload);
+  } catch {
+    items = [];
+  }
+
+  const normalized = items
+    .map((item) => {
+      if (!item || typeof item !== "object") return null;
+      const quote = String(item.quote || "").replace(/\s+/g, " ").trim();
+      if (!quote) return null;
+
+      const name = String(item.name || "Anonyme").replace(/\s+/g, " ").trim();
+      const detail = String(item.detail || "").replace(/\s+/g, " ").trim();
+      const source = String(item.source || "").replace(/\s+/g, " ").trim();
+      const date = String(item.date || "").replace(/\s+/g, " ").trim();
+
+      return { quote, name, detail, source, date };
+    })
+    .filter(Boolean)
+    .slice(0, 6);
+
+  if (normalized.length === 0) {
+    empty.hidden = false;
+    grid.hidden = true;
+    return;
+  }
+
+  empty.hidden = true;
+  grid.hidden = false;
+  grid.replaceChildren();
+
+  for (const t of normalized) {
+    const figure = document.createElement("figure");
+    figure.className = "card testimonial-card";
+
+    const blockquote = document.createElement("blockquote");
+    blockquote.className = "testimonial-quote";
+    const p = document.createElement("p");
+    p.textContent = t.quote;
+    blockquote.appendChild(p);
+    figure.appendChild(blockquote);
+
+    const meta = document.createElement("figcaption");
+    meta.className = "testimonial-meta";
+
+    const avatar = document.createElement("div");
+    avatar.className = "testimonial-avatar";
+    avatar.setAttribute("aria-hidden", "true");
+    avatar.textContent = initialsFromName(t.name);
+    meta.appendChild(avatar);
+
+    const info = document.createElement("div");
+    const strong = document.createElement("strong");
+    strong.textContent = t.name;
+    info.appendChild(strong);
+
+    if (t.detail) {
+      const detail = document.createElement("span");
+      detail.className = "testimonial-detail";
+      detail.textContent = t.detail;
+      info.appendChild(detail);
+    }
+
+    if (t.source || t.date) {
+      const src = document.createElement("span");
+      src.className = "testimonial-source";
+      src.textContent = [t.source, t.date].filter(Boolean).join(" · ");
+      info.appendChild(src);
+    }
+
+    meta.appendChild(info);
+    figure.appendChild(meta);
+    grid.appendChild(figure);
+  }
+}
+
 function setupResponsiveTables() {
   const tables = document.querySelectorAll("table.niche-table, table.policy-table");
   for (const table of tables) {
@@ -919,6 +1023,7 @@ function main() {
   setupScrollAnimations();
   setupResponsiveTables();
   setupHeroBackground();
+  setupTestimonials();
 
   const root = document.getElementById("cfgForm");
   if (root) setupConfigurator(root);
