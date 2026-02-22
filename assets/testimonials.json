@@ -1,3 +1,26 @@
 {
-  "items": []
+  "items": [
+    {
+      "quote": "Contrairement à ce que suggèrent certains commentaires en ligne, l'affiliation marketing n'est pas un moyen de s'enrichir rapidement.",
+      "name": "Shopify",
+      "detail": "Guide (affiliation marketing)",
+      "source": "Shopify France",
+      "date": "17 mars 2025",
+      "url": "https://www.shopify.com/fr/blog/comment-mettre-en-place-un-programme-d-affiliation-pour-votre-boutique-shopify"
+    },
+    {
+      "quote": "Le marketing d'affiliation étant un système basé sur la performance, l'affilié perçoit uniquement une commission lorsqu'un visiteur est à l'origine d'une action.",
+      "name": "HubSpot",
+      "detail": "Guide (définition & exemples)",
+      "source": "HubSpot France",
+      "url": "https://blog.hubspot.fr/marketing/marketing-affiliation-definition-exemples"
+    },
+    {
+      "quote": "Le marketing d'affiliation crée une relation gagnant-gagnant entre l'annonceur et l'affilié.",
+      "name": "HubSpot",
+      "detail": "Rémunération & fonctionnement",
+      "source": "HubSpot France",
+      "url": "https://blog.hubspot.fr/marketing/remuneration-affiliation"
+    }
+  ]
 }

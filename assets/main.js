@@ -936,8 +936,9 @@ async function setupTestimonials() {
       const detail = String(item.detail || "").replace(/\s+/g, " ").trim();
       const source = String(item.source || "").replace(/\s+/g, " ").trim();
       const date = String(item.date || "").replace(/\s+/g, " ").trim();
+      const url = String(item.url || "").replace(/\s+/g, " ").trim();
 
-      return { quote, name, detail, source, date };
+      return { quote, name, detail, source, date, url };
     })
     .filter(Boolean)
     .slice(0, 6);
@@ -987,7 +988,25 @@ async function setupTestimonials() {
     if (t.source || t.date) {
       const src = document.createElement("span");
       src.className = "testimonial-source";
-      src.textContent = [t.source, t.date].filter(Boolean).join(" · ");
+
+      const isHttp = typeof t.url === "string" && /^https?:\/\//i.test(t.url);
+      if (t.source && isHttp) {
+        const a = document.createElement("a");
+        a.className = "link";
+        a.href = t.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = t.source;
+        src.appendChild(a);
+      } else if (t.source) {
+        src.appendChild(document.createTextNode(t.source));
+      }
+
+      if (t.date) {
+        if (src.childNodes.length > 0) src.appendChild(document.createTextNode(" · "));
+        src.appendChild(document.createTextNode(t.date));
+      }
+
       info.appendChild(src);
     }
 
