@@ -859,54 +859,78 @@
                 <p class="hint">
                   Une “page” = gabarit standard, CTA, interlinking de base, disclosure, mise en page.
 	                  (Comparatifs avancés / recherche profonde&nbsp;: <a class="link" href="/contact/">demande spéciale</a>.)
-	                </p>
-
-                <h3>7) Mensuel (option)</h3>
-                <div class="cfg-radio" role="group" aria-label="Choix du mensuel">
-                  <label class="cfg-radio-row">
-                    <input type="radio" name="monthly" value="0" data-label="Mensuel: aucun" checked />
-                    <span>Aucun</span>
-                    <strong>0€/mois</strong>
-                  </label>
-                  <label class="cfg-radio-row">
-                    <input type="radio" name="monthly" value="49" data-label="Mensuel: Care (maintenance tech + SEO de base)" />
-                    <span>Care (tech)</span>
-                    <strong>49€/mois</strong>
-                  </label>
-                  <label class="cfg-radio-row">
-                    <input type="radio" name="monthly" value="249" data-label="Mensuel: Growth (2 pages/mois + optimisation légère)" />
-                    <span>Growth</span>
-                    <strong>249€/mois</strong>
-                  </label>
-                </div>
-
-                <p class="hint">
-                  Le mensuel sert à <strong>maintenir</strong> (Care) ou <strong>faire grandir</strong> (Growth) le site après la livraison.
-                  Le détail ci-dessous donne le périmètre&nbsp;: on reste sur du “légèrement itératif” (pas du dev sur-mesure).
                 </p>
 
-                <div class="faq" style="margin-top: 10px" aria-label="Détail des abonnements mensuels">
-                  <details>
-                    <summary>Care (tech) — inclus</summary>
-                    <ul class="bullets">
-                      <li>Maintenance technique légère&nbsp;: petits correctifs, liens cassés, retouches de texte/CTA.</li>
-                      <li>Suivi indexation (Search Console)&nbsp;: erreurs simples, pages exclues, anomalies critiques.</li>
-                      <li>SEO de base&nbsp;: titres/meta, canonical, schema (si activé), micro‑maillage interne.</li>
-                      <li>1 demande “petite” / mois (au‑delà&nbsp;: Growth ou <a class="link" href="/contact/">demande spéciale</a>).</li>
-                    </ul>
+                <h3>7) Mensuel (option)</h3>
+                <div class="cfg-radio cfg-radio-accordion" role="group" aria-label="Choix du mensuel">
+                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+                    <summary class="cfg-radio-summary">
+                      <label class="cfg-radio-choice">
+                        <span class="cfg-radio-left">
+                          <input type="radio" name="monthly" value="0" data-label="Mensuel: aucun" checked />
+                          <span>Aucun</span>
+                        </span>
+                        <span class="cfg-radio-right">
+                          <strong>0€/mois</strong>
+                          <span class="cfg-caret" aria-hidden="true">▾</span>
+                        </span>
+                      </label>
+                    </summary>
+                    <div class="cfg-radio-body">
+                      <p class="hint" style="margin: 0">
+                        Pas d’itération mensuelle. Tu peux repasser sur un mensuel quand tu veux (Care ou Growth).
+                      </p>
+                    </div>
                   </details>
-                  <details>
-                    <summary>Growth — inclus</summary>
-                    <ul class="bullets">
-                      <li>Contenu&nbsp;: <strong>2 pages standard / mois</strong> (pour 1 langue) + mise en page + disclosure + maillage de base.</li>
-                      <li>Optimisation légère&nbsp;: refresh d’1 page existante (title/intro/CTA) selon la donnée.</li>
-                      <li>Suivi&nbsp;: points d’action à partir de GSC/GA4 (requêtes, CTR, pages qui montent, clics).</li>
-                      <li>Roadmap contenu&nbsp;: backlog de sujets + priorités de cluster (hub → money → support).</li>
-                    </ul>
-                    <p class="hint" style="margin-bottom: 0">
-                      “Page standard” = même gabarit que le pack contenu. Comparatifs avancés / recherche profonde&nbsp;:
-                      <a class="link" href="/contact/">demande spéciale</a>. Multi‑langues&nbsp;: à partir de 2 langues, on calibre ensemble.
-                    </p>
+
+                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+                    <summary class="cfg-radio-summary">
+                      <label class="cfg-radio-choice">
+                        <span class="cfg-radio-left">
+                          <input type="radio" name="monthly" value="49" data-label="Mensuel: Care (maintenance tech + SEO de base)" />
+                          <span>Care (tech)</span>
+                        </span>
+                        <span class="cfg-radio-right">
+                          <strong>49€/mois</strong>
+                          <span class="cfg-caret" aria-hidden="true">▾</span>
+                        </span>
+                      </label>
+                    </summary>
+                    <div class="cfg-radio-body">
+                      <ul class="bullets">
+                        <li>Maintenance technique légère&nbsp;: petits correctifs, liens cassés, retouches de texte/CTA.</li>
+                        <li>Suivi indexation (Search Console)&nbsp;: erreurs simples, pages exclues, anomalies critiques.</li>
+                        <li>SEO de base&nbsp;: titres/meta, canonical, schema (si activé), micro‑maillage interne.</li>
+                        <li>1 demande “petite” / mois (au‑delà&nbsp;: Growth ou <a class="link" href="/contact/">demande spéciale</a>).</li>
+                      </ul>
+                    </div>
+                  </details>
+
+                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+                    <summary class="cfg-radio-summary">
+                      <label class="cfg-radio-choice">
+                        <span class="cfg-radio-left">
+                          <input type="radio" name="monthly" value="249" data-label="Mensuel: Growth (2 pages/mois + optimisation légère)" />
+                          <span>Growth</span>
+                        </span>
+                        <span class="cfg-radio-right">
+                          <strong>249€/mois</strong>
+                          <span class="cfg-caret" aria-hidden="true">▾</span>
+                        </span>
+                      </label>
+                    </summary>
+                    <div class="cfg-radio-body">
+                      <ul class="bullets">
+                        <li>Contenu&nbsp;: <strong>2 pages standard / mois</strong> (pour 1 langue) + mise en page + disclosure + maillage de base.</li>
+                        <li>Optimisation légère&nbsp;: refresh d’1 page existante (title/intro/CTA) selon la donnée.</li>
+                        <li>Suivi&nbsp;: points d’action à partir de GSC/GA4 (requêtes, CTR, pages qui montent, clics).</li>
+                        <li>Roadmap contenu&nbsp;: backlog de sujets + priorités de cluster (hub → money → support).</li>
+                      </ul>
+                      <p class="hint" style="margin: 0">
+                        “Page standard” = même gabarit que le pack contenu. Comparatifs avancés / recherche profonde&nbsp;:
+                        <a class="link" href="/contact/">demande spéciale</a>. Multi‑langues&nbsp;: à partir de 2 langues, on calibre ensemble.
+                      </p>
+                    </div>
                   </details>
                 </div>
 

@@ -470,6 +470,16 @@ function setupConfigurator(root) {
     if (e.target && e.target.matches && e.target.matches('input[type="checkbox"][data-lang-opt]')) {
       lastLangChanged = e.target;
     }
+
+    if (e.target && e.target.matches && e.target.matches('input[type="radio"][name="monthly"]')) {
+      const chosen = e.target.closest('details[data-radio-accordion="monthly"]');
+      if (chosen) {
+        chosen.open = true;
+        for (const other of root.querySelectorAll('details[data-radio-accordion="monthly"]')) {
+          if (other !== chosen) other.open = false;
+        }
+      }
+    }
     render();
   });
 
