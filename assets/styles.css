@@ -1187,6 +1187,45 @@ h1 {
   margin-top: 10px;
 }
 
+.cfg-trust {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 12px 0 0;
+}
+
+.cfg-trust-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.cfg-trust-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--accent2);
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.cfg-trust-text strong {
+  display: block;
+  font-size: 12px;
+  line-height: 1.15;
+}
+
+.cfg-trust-text span {
+  display: block;
+  font-size: 11px;
+  line-height: 1.25;
+  color: var(--muted2);
+  margin-top: 2px;
+}
+
 .cfg-note {
   margin: 10px 0 0;
   font-size: 12px;
@@ -1611,6 +1650,10 @@ select optgroup {
 
   .cfg-card {
     padding: 14px;
+  }
+
+  .cfg-trust {
+    grid-template-columns: 1fr;
   }
 
   .cfg-row,
