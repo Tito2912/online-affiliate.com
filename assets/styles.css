@@ -720,6 +720,32 @@ h1 {
   box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
 }
 
+.banner-slab {
+  padding: 0;
+  overflow: hidden;
+}
+
+.banner-media {
+  display: block;
+  margin: 0;
+}
+
+.banner-media img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.banner-caption {
+  margin: 0;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--muted2);
+  text-align: center;
+}
+
 .feature-slab {
   padding: 0;
 }
