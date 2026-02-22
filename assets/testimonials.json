@@ -1,26 +1,36 @@
 {
   "items": [
     {
-      "quote": "Contrairement à ce que suggèrent certains commentaires en ligne, l'affiliation marketing n'est pas un moyen de s'enrichir rapidement.",
+      "quote": "Avec l'affiliation marketing, marques et créateurs de contenu tirent profit d'une collaboration mutuelle.",
       "name": "Shopify",
-      "detail": "Guide (affiliation marketing)",
+      "detail": "Guide 2025 (définition & avantages)",
       "source": "Shopify France",
       "date": "17 mars 2025",
       "url": "https://www.shopify.com/fr/blog/comment-mettre-en-place-un-programme-d-affiliation-pour-votre-boutique-shopify"
     },
     {
-      "quote": "Le marketing d'affiliation étant un système basé sur la performance, l'affilié perçoit uniquement une commission lorsqu'un visiteur est à l'origine d'une action.",
+      "quote": "Le marketing d'affiliation est devenu l'un des outils de génération de revenus passifs les plus populaires.",
       "name": "HubSpot",
-      "detail": "Guide (définition & exemples)",
+      "detail": "Définition & exemples",
       "source": "HubSpot France",
+      "date": "29 septembre 2025",
       "url": "https://blog.hubspot.fr/marketing/marketing-affiliation-definition-exemples"
     },
     {
-      "quote": "Le marketing d'affiliation crée une relation gagnant-gagnant entre l'annonceur et l'affilié.",
-      "name": "HubSpot",
-      "detail": "Rémunération & fonctionnement",
-      "source": "HubSpot France",
-      "url": "https://blog.hubspot.fr/marketing/remuneration-affiliation"
+      "quote": "Pour les marques, c’est l’opportunité de faire de ce levier un moteur de performance majeur.",
+      "name": "Journal du Net",
+      "detail": "Tendances 2025 (affiliation)",
+      "source": "Journal du Net",
+      "date": "24 janvier 2025",
+      "url": "https://www.journaldunet.com/martech/1538375-quelles-tendances-suivre-en-2025-dans-le-marche-du-marketing-d-affiliation/"
+    },
+    {
+      "quote": "De plus en plus, les entreprises y recourent et cherchent des profils qui comprennent les enjeux stratégiques pour améliorer leur visibilité.",
+      "name": "Journal du Net",
+      "detail": "Présentation (marketing d'affiliation)",
+      "source": "Journal du Net",
+      "date": "1er février 2021",
+      "url": "https://www.journaldunet.com/management/formation/1497041-10-formations-courtes-a-suivre-pour-seduire-les-recruteurs/1497061-affiliation"
     }
   ]
 }
