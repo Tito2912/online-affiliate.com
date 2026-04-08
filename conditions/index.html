@@ -89,7 +89,7 @@
       <div class="container">
         <article class="cfg-card">
           <h1 style="margin-top: 0">Conditions d’utilisation</h1>
-          <p class="muted">Dernière mise à jour : 1 février 2026.</p>
+          <p class="muted">Dernière mise à jour : 8 avril 2026.</p>
     	          <p class="muted">
     	            Ces conditions encadrent l’utilisation du site et les <strong>commandes</strong> passées via le configurateur (packs
     	            standardisés). Pour les demandes hors pack / sur mesure, le contact se fait par email (voir page Contact).
@@ -165,16 +165,16 @@
     	            process de bout en bout : création/configuration des comptes nécessaires, mise en place technique et handover. L’objectif est
     	            d’éviter les erreurs de configuration et d’assurer une livraison “clé en main”.
     	          </p>
-              <ul class="bullets">
-                <li>Création/configuration de comptes : Google, Netlify, Bing, GitHub, programmes/réseaux d’affiliation (selon besoin)</li>
-                <li>Configuration sécurité (2FA quand disponible) + rôles/permissions</li>
-                <li>Configuration tracking (GA4/GSC) + conventions (UTM/événements clics)</li>
-                <li>
-                  Achat/enregistrement d’un nom de domaine chez OVH <strong>inclus dans le pack</strong> (voir 6.5) — sans demander les données
-                  bancaires du client
-                </li>
-                <li>Remise des accès en fin de prestation (ou au fil de l’eau selon organisation)</li>
-              </ul>
+	              <ul class="bullets">
+	                <li>Création/configuration de comptes : Google, Netlify, Bing, GitHub, programmes/réseaux d’affiliation (selon besoin)</li>
+	                <li>Configuration sécurité (2FA quand disponible) + rôles/permissions</li>
+	                <li>Configuration tracking (GA4/GSC) + conventions (UTM/événements clics)</li>
+	                <li>
+	                  Achat/enregistrement d’un nom de domaine chez OVH <strong>inclus dans le pack</strong> (voir 6.5) — sans demander les données
+	                  bancaires du client (domaine enregistré au nom du client / titulaire)
+	                </li>
+	                <li>Remise des accès en fin de prestation (ou au fil de l’eau selon organisation)</li>
+	              </ul>
     
               <h3 class="h3">6.2) Intervention du client (si requis par la plateforme)</h3>
               <p class="muted">
@@ -200,12 +200,12 @@
     	            peuvent être renseignées par E-Com Shop (avec ton autorisation) ou directement par toi sur la plateforme (cas KYC/justificatifs).
     	          </p>
     	          <p class="muted">
-    	            Dans certains cas, un fournisseur peut demander des pièces justificatives (ex. justificatif d’identité/domicile) ou des
-    	            informations fiscales. Ces éléments sont, quand c’est possible, renseignés/téléversés directement sur la plateforme concernée.
-    	            <strong>E-Com Shop</strong> ne demande pas et ne stocke pas de données de carte bancaire : le <strong>nom de domaine</strong> est
-    	            acheté par E-Com Shop (inclus dans le pack, voir 6.5). Pour les services qui nécessitent des coordonnées de paiement pour te
-    	            rémunérer (ex. réseaux d’affiliation), ces informations sont renseignées directement chez le fournisseur.
-    	          </p>
+	    	            Dans certains cas, un fournisseur peut demander des pièces justificatives (ex. justificatif d’identité/domicile) ou des
+	    	            informations fiscales. Ces éléments sont, quand c’est possible, renseignés/téléversés directement sur la plateforme concernée.
+	    	            <strong>E-Com Shop</strong> ne demande pas et ne stocke pas de données de carte bancaire : le <strong>nom de domaine</strong> est
+	    	            acheté/enregistré au nom du client (titulaire/registrant) et inclus dans le pack (voir 6.5). Pour les services qui nécessitent des coordonnées de paiement pour te
+	    	            rémunérer (ex. réseaux d’affiliation), ces informations sont renseignées directement chez le fournisseur.
+	    	          </p>
     
               <h3 class="h3">6.4) Accès, sécurité et remise</h3>
     	          <ul class="bullets">
@@ -251,15 +251,35 @@
     	            contraires aux conditions des plateformes.
     	          </p>
     
-    	          <h2 class="h3" id="paiement">10) Prix & paiement</h2>
-    	          <p class="muted">
-    	            Le configurateur affiche un prix indicatif. La page de paiement correspond au <strong>pack one-shot</strong> configuré. Si une
-    	            option mensuelle est sélectionnée, elle est mise en place après commande (selon accord).
-    	          </p>
-    	          <p class="muted">
-    	            Le paiement est traité par un prestataire de paiement (ex. Stripe). E-Com Shop ne collecte pas et ne stocke pas tes données de
-    	            carte bancaire.
-    	          </p>
+	    	          <h2 class="h3" id="paiement">10) Prix & paiement</h2>
+	    	          <p class="muted">
+	    	            Le configurateur affiche un prix indicatif. La page de paiement correspond au <strong>pack one-shot</strong> configuré. Si un
+	    	            <strong>forfait annuel</strong> est sélectionné, il est facturé immédiatement en même temps que le pack one-shot. Si un
+	    	            abonnement <strong>mensuel</strong> est sélectionné, il est mis en place après commande (selon accord).
+	    	          </p>
+	              <h3 class="h3">10.1) Abonnement (Care / Growth)</h3>
+	              <p class="muted">
+	                L’abonnement (mensuel ou forfait annuel) est une prestation récurrente distincte du pack one-shot. Il démarre après la
+	                commande, une fois le périmètre confirmé. Le forfait annuel est réglé en une fois à la commande ; le mensuel est facturé
+	                ensuite selon l’option choisie.
+	              </p>
+	              <ul class="bullets">
+	                <li><strong>Mensuel (engagement minimum) :</strong> Care : 3 mois. Growth : 6 mois.</li>
+	                <li><strong>Forfait annuel :</strong> paiement annuel d’avance (1 mois offert), engagement 12 mois. Prestations délivrées au fil des mois (non cumulables, rollover max 1 mois).</li>
+	                <li><strong>Périmètre :</strong> 1 site / 1 niche / 1 langue par défaut (multi‑langues : sur calibration).</li>
+	                <li><strong>Care :</strong> 1 demande “petite” / mois (≤ 30 min) + maintenance légère + corrections simples d’indexation.</li>
+	                <li><strong>Growth :</strong> 2 pages standard / mois (1 langue) + optimisation légère d’1 page existante + roadmap contenu.</li>
+	                <li><strong>Définition “page standard” :</strong> gabarit standard, CTA, disclosure, mise en page, maillage de base.</li>
+	              </ul>
+	              <h3 class="h3">10.2) Hors périmètre & demandes spéciales</h3>
+	              <p class="muted">
+	                Toute demande hors périmètre (fonctionnalités spécifiques, gros volume, comparatifs avancés, recherche profonde, netlinking,
+	                ads, etc.) fait l’objet d’un devis et/ou d’une facturation au temps passé, après validation.
+	              </p>
+	    	          <p class="muted">
+	    	            Le paiement est traité par un prestataire de paiement (ex. Stripe). E-Com Shop ne collecte pas et ne stocke pas tes données de
+	    	            carte bancaire.
+	    	          </p>
     	          <p class="muted">
     	            Pour une demande hors pack, un devis/contrat précise le prix final, les modalités et les livrables.
     	          </p>

@@ -20,7 +20,7 @@ function clampInt(value, min, max) {
   return Math.min(max, Math.max(min, n));
 }
 
-function buildRecap(lines, totalOneShot, monthly) {
+function buildRecap(lines, totalOneShot, recurringAmount, recurringPeriod = "month") {
   const parts = [];
   parts.push("Récap pack");
   for (const line of lines) {
@@ -28,8 +28,11 @@ function buildRecap(lines, totalOneShot, monthly) {
     else parts.push(`- ${line.label}`);
   }
   parts.push("");
-  parts.push(`Total one-shot : ${moneyEUR(totalOneShot)}`);
-  parts.push(`Mensuel : ${moneyEUR(monthly)} / mois`);
+  const period = String(recurringPeriod || "month").toLowerCase() === "year" ? "an" : "mois";
+  const payNow = totalOneShot + (period === "an" ? recurringAmount : 0);
+  parts.push(`À payer maintenant : ${moneyEUR(payNow)}`);
+  parts.push(`Pack one-shot : ${moneyEUR(totalOneShot)}`);
+  parts.push(`Abonnement : ${moneyEUR(recurringAmount)} / ${period}`);
   return parts.join("\n");
 }
 
@@ -78,6 +81,7 @@ function setupConfigurator(root) {
 
   const totalOneShotField = document.getElementById("totalOneShotField");
   const totalMonthlyField = document.getElementById("totalMonthlyField");
+  const totalMonthlyPeriodField = document.getElementById("totalMonthlyPeriodField");
   const recapField = document.getElementById("recapField");
   const langCountField = document.getElementById("langCountField");
   const langsSelectedField = document.getElementById("langsSelectedField");
@@ -241,8 +245,10 @@ function setupConfigurator(root) {
 
   function getMonthly() {
     const r = root.querySelector('input[name="monthly"]:checked');
-    if (!r) return { label: "Mensuel: aucun", price: 0 };
-    return { label: r.dataset.label || "Mensuel", price: Number(r.value || 0) };
+    if (!r) return { label: "Abonnement: aucun", price: 0, period: "month" };
+    const periodRaw = String(r.dataset.period || "month").toLowerCase();
+    const period = periodRaw === "year" ? "year" : "month";
+    return { label: r.dataset.label || "Abonnement", price: Number(r.value || 0), period };
   }
 
   function getChecksState() {
@@ -426,7 +432,8 @@ function setupConfigurator(root) {
     const monthly = getMonthly();
 
     const totalOneShot = lines.reduce((sum, it) => sum + it.price, 0);
-    const totalOneShotText = moneyEUR(totalOneShot);
+    const payNow = totalOneShot + (monthly.period === "year" ? monthly.price : 0);
+    const payNowText = moneyEUR(payNow);
 
     if (linesEl) {
       linesEl.innerHTML =
@@ -439,12 +446,14 @@ function setupConfigurator(root) {
           .join("") || `<div class="muted">Aucune option sélectionnée.</div>`;
     }
 
-    if (totalEl) totalEl.textContent = totalOneShotText;
-    if (monthlyEl) monthlyEl.textContent = `${moneyEUR(monthly.price)} / mois`;
+    if (totalEl) totalEl.textContent = payNowText;
+    const periodLabel = monthly.period === "year" ? "an" : "mois";
+    if (monthlyEl) monthlyEl.textContent = `${moneyEUR(monthly.price)} / ${periodLabel}`;
 
     if (totalOneShotField) totalOneShotField.value = String(totalOneShot);
     if (totalMonthlyField) totalMonthlyField.value = String(monthly.price);
-    if (recapField) recapField.value = buildRecap(lines, totalOneShot, monthly.price);
+    if (totalMonthlyPeriodField) totalMonthlyPeriodField.value = String(monthly.period || "month");
+    if (recapField) recapField.value = buildRecap(lines, totalOneShot, monthly.price, monthly.period);
     if (langCountField) langCountField.value = String(lang.count);
     if (langsSelectedField) langsSelectedField.value = lang.selected.join(", ");
 
@@ -604,6 +613,7 @@ function setupConfigurator(root) {
         affExtra: clampInt(affExtraInput?.value ?? 0, 0, 20),
         contentPack: Number(contentRadio?.value || 150),
         monthly: Number(monthlyRadio?.value || 0),
+        monthlyPeriod: String(monthlyRadio?.dataset?.period || "month"),
         langCount: getLangCount(),
         langs: getSelectedLangValues(),
         consent: Boolean(opsConsent?.checked),
@@ -611,6 +621,7 @@ function setupConfigurator(root) {
       totals: {
         oneShot: Number(totalOneShotField?.value || 0),
         monthly: Number(totalMonthlyField?.value || 0),
+        monthlyPeriod: String(totalMonthlyPeriodField?.value || "month"),
       },
       recap: String(recapField?.value || ""),
       source: "configurateur",
@@ -630,7 +641,6 @@ function setupConfigurator(root) {
   function applyPreset(presetName) {
     const presets = {
       sprint: {
-        aff1: true,
         affExtra: 0,
         langCount: 1,
         langs: ["fr"],
@@ -639,7 +649,6 @@ function setupConfigurator(root) {
         monthly: "0",
       },
       launch: {
-        aff1: true,
         affExtra: 0,
         langCount: 1,
         langs: ["fr"],
@@ -648,7 +657,6 @@ function setupConfigurator(root) {
         monthly: "0",
       },
       growth: {
-        aff1: true,
         affExtra: 1,
         langCount: 1,
         langs: ["fr"],
@@ -661,7 +669,7 @@ function setupConfigurator(root) {
     const preset = presets[presetName];
     if (!preset) return false;
 
-    if (aff1) aff1.checked = Boolean(preset.aff1);
+    if (aff1) aff1.checked = true;
     if (affExtraInput) affExtraInput.value = String(clampInt(preset.affExtra, 0, 20));
 
     if (langCountInput) langCountInput.value = String(clampInt(preset.langCount ?? 1, 1, Number(langCountInput.max || 8)));
@@ -725,8 +733,10 @@ function setupCheckout() {
   recapEl.textContent = String(order.recap || "").trim() || "Récap indisponible.";
   const oneShot = Number(order.totals?.oneShot || 0);
   const monthly = Number(order.totals?.monthly || 0);
-  totalEl.textContent = moneyEUR(oneShot);
-  monthlyEl.textContent = `${moneyEUR(monthly)} / mois`;
+  const monthlyPeriod = String(order.totals?.monthlyPeriod || order.config?.monthlyPeriod || "month").toLowerCase() === "year" ? "year" : "month";
+  const payNow = oneShot + (monthlyPeriod === "year" ? monthly : 0);
+  totalEl.textContent = moneyEUR(payNow);
+  monthlyEl.textContent = `${moneyEUR(monthly)} / ${monthlyPeriod === "year" ? "an" : "mois"}`;
 
   if (!order.config?.consent) {
     payBtn.disabled = true;
@@ -830,7 +840,7 @@ function setupThankYou() {
   const project = order.project || {};
   const totals = order.totals || {};
 
-  const fields = {
+	  const fields = {
     stripe_session_id: stripeSessionId,
     created_at: order.createdAt || "",
     prenom: order.customer.firstName || "",
@@ -851,11 +861,12 @@ function setupThankYou() {
     delai_estime: project.delai_estime || project.delaiEstime || project.delai || "",
     nombre_langues: String(order.config?.langCount ?? ""),
     langues: Array.isArray(order.config?.langs) ? order.config.langs.join(", ") : "",
-    total_one_shot: String(totals.oneShot ?? ""),
-    total_monthly: String(totals.monthly ?? ""),
-    recap: String(order.recap || ""),
-    config_json: JSON.stringify(order.config || {}),
-  };
+	    total_one_shot: String(totals.oneShot ?? ""),
+	    total_monthly: String(totals.monthly ?? ""),
+	    monthly_period: String(totals.monthlyPeriod || order.config?.monthlyPeriod || ""),
+	    recap: String(order.recap || ""),
+	    config_json: JSON.stringify(order.config || {}),
+	  };
 
   submitNetlifyForm("commande", fields)
     .then((ok) => {

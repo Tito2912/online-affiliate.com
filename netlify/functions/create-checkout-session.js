@@ -57,6 +57,8 @@ function calcTotals(order) {
   const langCount = clampInt(order?.config?.langCount ?? 1, 1, 8);
   const langs = Array.isArray(order?.config?.langs) ? order.config.langs.map((s) => String(s)).filter(Boolean) : [];
   const monthly = Number(order?.config?.monthly || 0);
+  const monthlyPeriodRaw = String(order?.config?.monthlyPeriod || "").trim().toLowerCase();
+  let monthlyPeriod = monthlyPeriodRaw;
 
   const allowedLangs = new Set([
     "fr",
@@ -70,8 +72,16 @@ function calcTotals(order) {
     "pl",
   ]);
 
-  const allowedMonthly = new Set([0, 49, 249]);
-  if (!allowedMonthly.has(monthly)) throw new Error("Option mensuelle invalide.");
+  if (!monthlyPeriod) {
+    if (monthly === 1089 || monthly === 4939) monthlyPeriod = "year";
+    else monthlyPeriod = "month";
+  }
+  if (monthlyPeriod !== "month" && monthlyPeriod !== "year") throw new Error("Période d’abonnement invalide.");
+
+  const allowedPlans = new Set(["99|month", "449|month", "1089|year", "4939|year"]);
+  if (monthly !== 0 && !allowedPlans.has(`${monthly}|${monthlyPeriod}`)) {
+    throw new Error("Option d’abonnement invalide.");
+  }
 
   if (langs.length !== langCount) {
     throw new Error(`Langues invalides : ${langs.length} sélectionnées, ${langCount} attendue(s).`);
@@ -98,10 +108,12 @@ function calcTotals(order) {
   items.push({ label: "Fondations (site + tracking + pages + branding + logo)", amount: 860 });
 
   const optionPrices = [
-    { key: "programme_affilie_1", label: "Programme affilié #1", amount: 190 },
     { key: "performance", label: "Performance (cache + images + réglages core)", amount: 190 },
     { key: "branding_premium", label: "Branding premium (direction artistique + UI plus poussée)", amount: 490 },
   ];
+
+  // Programme affilié #1 (obligatoire)
+  items.push({ label: "Programme affilié #1 (obligatoire)", amount: 190 });
 
   for (const opt of optionPrices) {
     if (checks[opt.key]) items.push({ label: opt.label, amount: opt.amount });
@@ -117,9 +129,8 @@ function calcTotals(order) {
     items.push({ label: `Schema (FAQ/Review — selon gabarits) — palier ${pagesLabel}`, amount });
   }
 
-  const hasAff1 = Boolean(checks.programme_affilie_1);
   const affExtra = clampInt(order?.config?.affExtra ?? 0, 0, 20);
-  if (hasAff1 && affExtra > 0) {
+  if (affExtra > 0) {
     items.push({ label: `Programme affilié supplémentaire ×${affExtra}`, amount: affExtra * 150 });
   }
 
@@ -136,7 +147,7 @@ function calcTotals(order) {
   }
 
   const oneShot = items.reduce((sum, it) => sum + it.amount, 0);
-  return { items, oneShot, monthly, langCount, langs };
+  return { items, oneShot, monthly, monthlyPeriod, langCount, langs };
 }
 
 function chunkString(input, size) {
@@ -191,9 +202,12 @@ exports.handler = async (event) => {
     const niche = String(order?.project?.niche || "").trim();
     const delaiEstime = String(order?.project?.delai_estime || order?.project?.delaiEstime || order?.project?.delai || "").trim();
 
-    const { oneShot, monthly, langCount, langs } = calcTotals(order);
-    const amountCents = Math.round(oneShot * 100);
-    if (!Number.isFinite(amountCents) || amountCents <= 0) return json(400, { error: "Montant invalide." });
+    const { oneShot, monthly, monthlyPeriod, langCount, langs } = calcTotals(order);
+    const chargeAnnualNow = monthlyPeriod === "year" && monthly > 0;
+    const oneShotCents = Math.round(oneShot * 100);
+    const annualCents = chargeAnnualNow ? Math.round(monthly * 100) : 0;
+    const payNowCents = oneShotCents + annualCents;
+    if (!Number.isFinite(payNowCents) || payNowCents <= 0) return json(400, { error: "Montant invalide." });
 
     const baseUrl = getBaseUrl(event.headers || {});
 
@@ -204,9 +218,17 @@ exports.handler = async (event) => {
     params.set("customer_email", email);
 
     params.set("line_items[0][price_data][currency]", "eur");
-    params.set("line_items[0][price_data][product_data][name]", "E-Com Shop — Machine d’affiliation (pack configuré)");
-    params.set("line_items[0][price_data][unit_amount]", String(amountCents));
+    params.set("line_items[0][price_data][product_data][name]", "E-Com Shop — Machine d’affiliation (pack one-shot configuré)");
+    params.set("line_items[0][price_data][unit_amount]", String(oneShotCents));
     params.set("line_items[0][quantity]", "1");
+
+    if (annualCents > 0) {
+      const annualName = monthly === 1089 ? "Abonnement annuel — Care (1 mois offert)" : monthly === 4939 ? "Abonnement annuel — Growth (1 mois offert)" : "Abonnement annuel";
+      params.set("line_items[1][price_data][currency]", "eur");
+      params.set("line_items[1][price_data][product_data][name]", annualName);
+      params.set("line_items[1][price_data][unit_amount]", String(annualCents));
+      params.set("line_items[1][quantity]", "1");
+    }
 
     params.set("metadata[source]", "online-affiliate.com");
     if (name) params.set("metadata[customer_name]", name);
@@ -215,6 +237,7 @@ exports.handler = async (event) => {
     params.set("metadata[langues]", langs.join(","));
     params.set("metadata[nombre_langues]", String(langCount));
     params.set("metadata[mensuel_selectionne]", String(monthly));
+    params.set("metadata[mensuel_period]", String(monthlyPeriod));
 
     const orderId = crypto.randomUUID();
     params.set("client_reference_id", orderId);
@@ -225,7 +248,7 @@ exports.handler = async (event) => {
       customer: order?.customer || {},
       project: order?.project || {},
       config: order?.config || {},
-      totals: { oneShot, monthly },
+      totals: { oneShot, monthly, monthlyPeriod },
       recap: String(order?.recap || ""),
     };
 

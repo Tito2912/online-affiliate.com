@@ -430,7 +430,7 @@ export function setupHeroBackground({ hostId = DEFAULT_HOST_ID } = {}) {
   const attrMotionOff =
     host.getAttribute("data-bg-motion") === "off" || document.body?.dataset?.bgMotion === "off";
 
-  const animate = forceMotion ? true : !(urlMotionOff || attrMotionOff);
+  const animate = forceMotion ? true : reduceMotion ? false : !(urlMotionOff || attrMotionOff);
 
   const accentA = getCssVarColor("--accent", [0.486, 0.227, 0.929]);
   const accentB = getCssVarColor("--accent2", [0.133, 0.773, 0.369]);

@@ -16,6 +16,7 @@ export default defineConfig({
         merci: resolve(__dirname, 'merci/index.html'),
         paiement: resolve(__dirname, 'paiement/index.html'),
         'paiement-annule': resolve(__dirname, 'paiement/annule/index.html'),
+        '404': resolve(__dirname, '404.html'),
       },
     },
   },

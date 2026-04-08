@@ -205,14 +205,14 @@
               <div class="hero-card-inner">
                 <p class="badge">Ce que tu reçois</p>
                 <h2 class="h3">Livrables “machine”</h2>
-                <ul class="check">
-                   <li>Site prêt à publier</li>
-                   <li>Mise en ligne complète</li>
-                   <li>Tracking et Analytics</li>
-                   <li>Conformité (pages légales)</li>
-                   <li>Monétisation intégrée</li>
-                   <li>Handover et documentation</li>
-                </ul>
+	                <ul class="check">
+	                   <li>Site prêt à publier</li>
+	                   <li>Mise en ligne complète</li>
+	                   <li>Tracking et Analytics</li>
+	                   <li>Conformité (pages légales)</li>
+	                   <li>Monétisation intégrée (programme affilié + tracking)</li>
+	                   <li>Handover et documentation</li>
+	                </ul>
                 <div class="divider"></div>
                 <p class="micro-note">
                   Commence simple, valide la niche, puis ajoute monétisation et contenu au fil de l’eau.
@@ -418,7 +418,7 @@
                     <li>Plus de pages quand une niche “accroche”</li>
                     <li>Plus de programmes quand ça convertit</li>
                     <li>Plus de langues quand le modèle marche</li>
-                    <li>Mensuel si tu veux itérer sans y penser</li>
+                    <li>Abonnement si tu veux itérer sans y penser</li>
                 </ul>
             </div>
           </div>
@@ -722,13 +722,14 @@
 	            </p>
 	          </div>
 
-	          <form class="cfg" id="cfgForm" data-queue="0">
+		          <form class="cfg" id="cfgForm" data-queue="0">
 
-	            <input type="hidden" id="totalOneShotField" value="" />
-	            <input type="hidden" id="totalMonthlyField" value="" />
-	            <input type="hidden" id="recapField" value="" />
-	            <input type="hidden" id="langCountField" value="1" />
-	            <input type="hidden" id="langsSelectedField" value="Français (FR)" />
+		            <input type="hidden" id="totalOneShotField" value="" />
+		            <input type="hidden" id="totalMonthlyField" value="" />
+		            <input type="hidden" id="totalMonthlyPeriodField" value="month" />
+		            <input type="hidden" id="recapField" value="" />
+		            <input type="hidden" id="langCountField" value="1" />
+		            <input type="hidden" id="langsSelectedField" value="Français (FR)" />
 
             <div class="cfg-grid">
               <div class="cfg-card">
@@ -813,7 +814,7 @@
 	                  Choisis 1 langue. Packs de contenu = <strong>par langue</strong>. (Multi-langue = structure + hreflang + gabarits.)
 	                </p>
 
-                <h3>3) Monétisation</h3>
+                <h3>3) Monétisation (obligatoire)</h3>
                 <label class="cfg-row">
                   <span class="cfg-row-left">
 	                    <input
@@ -822,19 +823,24 @@
 	                      name="programme_affilie_1"
 	                      value="oui"
 	                      checked
+	                      disabled
 	                      data-key="aff1"
 	                      data-price="190"
-	                      data-label="Programme affilié #1"
+	                      data-label="Programme affilié #1 (obligatoire)"
 	                    />
                     <span>Programme affilié #1</span>
                   </span>
                   <strong>190€</strong>
                 </label>
+                <p class="hint">
+                  Inclus : configuration d’un programme (selon niche) + intégration des liens + tracking des clics. Pour en ajouter d’autres,
+                  utilise l’option ci‑dessous.
+                </p>
 
                 <div class="cfg-row cfg-qty" aria-label="Programmes supplémentaires">
                   <span class="cfg-row-left">
                     <span>Programmes supplémentaires</span>
-                    <span class="muted">(nécessite le programme #1)</span>
+                    <span class="muted">(option)</span>
                   </span>
                   <div class="qty">
                     <button type="button" class="qty-btn" data-action="dec" data-target="affExtra" aria-label="Diminuer">−</button>
@@ -922,13 +928,13 @@
 	                  (Comparatifs avancés / recherche profonde&nbsp;: <a class="link" href="/contact/">demande spéciale</a>.)
                 </p>
 
-                <h3>7) Mensuel (option)</h3>
-                <div class="cfg-radio cfg-radio-accordion" role="group" aria-label="Choix du mensuel">
+                <h3>7) Abonnement (option)</h3>
+                <div class="cfg-radio cfg-radio-accordion" role="group" aria-label="Choix de l’abonnement">
                   <details class="cfg-radio-details" data-radio-accordion="monthly">
                     <summary class="cfg-radio-summary">
                       <label class="cfg-radio-choice">
                         <span class="cfg-radio-left">
-                          <input type="radio" name="monthly" value="0" data-label="Mensuel: aucun" checked />
+                          <input type="radio" name="monthly" value="0" data-period="month" data-label="Abonnement: aucun" checked />
                           <span>Aucun</span>
                         </span>
                         <span class="cfg-radio-right">
@@ -938,59 +944,120 @@
                       </label>
                     </summary>
                     <div class="cfg-radio-body">
-                      <p class="hint" style="margin: 0">
-                        Pas d’itération mensuelle. Tu peux repasser sur un mensuel quand tu veux (Care ou Growth).
-                      </p>
+	                      <p class="hint" style="margin: 0">
+	                        Pas d’abonnement. Tu peux activer Care/Growth (mensuel ou annuel) quand tu veux.
+	                      </p>
                     </div>
                   </details>
 
-                  <details class="cfg-radio-details" data-radio-accordion="monthly">
-                    <summary class="cfg-radio-summary">
-                      <label class="cfg-radio-choice">
-                        <span class="cfg-radio-left">
-                          <input type="radio" name="monthly" value="49" data-label="Mensuel: Care (maintenance tech + SEO de base)" />
-                          <span>Care (tech)</span>
-                        </span>
-                        <span class="cfg-radio-right">
-                          <strong>49€/mois</strong>
-                          <span class="cfg-caret" aria-hidden="true">▾</span>
-                        </span>
-                      </label>
-                    </summary>
-                    <div class="cfg-radio-body">
-                      <ul class="bullets">
-                        <li>Maintenance technique légère&nbsp;: petits correctifs, liens cassés, retouches de texte/CTA.</li>
-                        <li>Suivi indexation (Search Console)&nbsp;: erreurs simples, pages exclues, anomalies critiques.</li>
-                        <li>SEO de base&nbsp;: titres/meta, canonical, schema (si activé), micro‑maillage interne.</li>
-                        <li>1 demande “petite” / mois (au‑delà&nbsp;: Growth ou <a class="link" href="/contact/">demande spéciale</a>).</li>
-                      </ul>
-                    </div>
-                  </details>
+	                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+	                    <summary class="cfg-radio-summary">
+	                      <label class="cfg-radio-choice">
+	                        <span class="cfg-radio-left">
+	                          <input type="radio" name="monthly" value="99" data-period="month" data-label="Abonnement: Care (mensuel, maintenance tech + SEO de base)" />
+	                          <span>Care (tech)</span>
+	                        </span>
+	                        <span class="cfg-radio-right">
+	                          <strong>99€/mois</strong>
+	                          <span class="cfg-caret" aria-hidden="true">▾</span>
+	                        </span>
+	                      </label>
+	                    </summary>
+	                    <div class="cfg-radio-body">
+	                      <ul class="bullets">
+	                        <li>Maintenance technique légère&nbsp;: petits correctifs, liens cassés, retouches de texte/CTA.</li>
+	                        <li>Suivi indexation (Search Console)&nbsp;: erreurs simples, pages exclues, anomalies critiques.</li>
+	                        <li>SEO de base&nbsp;: titres/meta, canonical, schema (si activé), micro‑maillage interne.</li>
+	                        <li>
+	                          1 demande “petite” / mois (≤ 30 min). Au‑delà&nbsp;: Growth (mensuel) ou
+	                          <a class="link" href="/contact/">demande spéciale</a>.
+	                        </li>
+	                        <li>Engagement minimum&nbsp;: 3 mois.</li>
+	                      </ul>
+	                    </div>
+	                  </details>
 
-                  <details class="cfg-radio-details" data-radio-accordion="monthly">
-                    <summary class="cfg-radio-summary">
-                      <label class="cfg-radio-choice">
-                        <span class="cfg-radio-left">
-                          <input type="radio" name="monthly" value="249" data-label="Mensuel: Growth (2 pages/mois + optimisation légère)" />
-                          <span>Growth</span>
-                        </span>
-                        <span class="cfg-radio-right">
-                          <strong>249€/mois</strong>
-                          <span class="cfg-caret" aria-hidden="true">▾</span>
-                        </span>
-                      </label>
-                    </summary>
-                    <div class="cfg-radio-body">
+	                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+	                    <summary class="cfg-radio-summary">
+	                      <label class="cfg-radio-choice">
+	                        <span class="cfg-radio-left">
+	                          <input
+	                            type="radio"
+	                            name="monthly"
+	                            value="1089"
+	                            data-period="year"
+	                            data-label="Abonnement: Care (annuel, 1 mois offert)"
+	                          />
+	                          <span>Care (annuel)</span>
+	                        </span>
+	                        <span class="cfg-radio-right">
+	                          <strong>1&nbsp;089€/an</strong>
+	                          <span class="cfg-caret" aria-hidden="true">▾</span>
+	                        </span>
+	                      </label>
+	                    </summary>
+	                    <div class="cfg-radio-body">
+	                      <ul class="bullets">
+	                        <li>Inclus : mêmes éléments que Care (mensuel).</li>
+	                        <li>Paiement annuel d’avance&nbsp;: <strong>1 mois offert</strong>.</li>
+	                        <li>Livraison au fil des mois (non cumulable, rollover max 1 mois).</li>
+	                      </ul>
+	                    </div>
+	                  </details>
+
+	                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+	                    <summary class="cfg-radio-summary">
+	                      <label class="cfg-radio-choice">
+	                        <span class="cfg-radio-left">
+	                          <input type="radio" name="monthly" value="449" data-period="month" data-label="Abonnement: Growth (mensuel, 2 pages/mois + optimisation + roadmap)" />
+	                          <span>Growth (mensuel)</span>
+	                        </span>
+	                        <span class="cfg-radio-right">
+	                          <strong>449€/mois</strong>
+	                          <span class="cfg-caret" aria-hidden="true">▾</span>
+	                        </span>
+	                      </label>
+	                    </summary>
+	                    <div class="cfg-radio-body">
                       <ul class="bullets">
                         <li>Contenu&nbsp;: <strong>2 pages standard / mois</strong> (pour 1 langue) + mise en page + disclosure + maillage de base.</li>
                         <li>Optimisation légère&nbsp;: refresh d’1 page existante (title/intro/CTA) selon la donnée.</li>
                         <li>Suivi&nbsp;: points d’action à partir de GSC/GA4 (requêtes, CTR, pages qui montent, clics).</li>
                         <li>Roadmap contenu&nbsp;: backlog de sujets + priorités de cluster (hub → money → support).</li>
+                        <li>Engagement minimum&nbsp;: 6 mois.</li>
                       </ul>
                       <p class="hint" style="margin: 0">
                         “Page standard” = même gabarit que le pack contenu. Comparatifs avancés / recherche profonde&nbsp;:
                         <a class="link" href="/contact/">demande spéciale</a>. Multi‑langues&nbsp;: à partir de 2 langues, on calibre ensemble.
                       </p>
+                    </div>
+                  </details>
+
+                  <details class="cfg-radio-details" data-radio-accordion="monthly">
+                    <summary class="cfg-radio-summary">
+                      <label class="cfg-radio-choice">
+                        <span class="cfg-radio-left">
+                          <input
+                            type="radio"
+                            name="monthly"
+                            value="4939"
+                            data-period="year"
+                            data-label="Abonnement: Growth (annuel, 1 mois offert)"
+                          />
+                          <span>Growth (annuel)</span>
+                        </span>
+                        <span class="cfg-radio-right">
+                          <strong>4&nbsp;939€/an</strong>
+                          <span class="cfg-caret" aria-hidden="true">▾</span>
+                        </span>
+                      </label>
+                    </summary>
+                    <div class="cfg-radio-body">
+                      <ul class="bullets">
+                        <li>Inclus : mêmes éléments que Growth (mensuel).</li>
+                        <li>Paiement annuel d’avance&nbsp;: <strong>1 mois offert</strong>.</li>
+                        <li>Livraison au fil des mois (pages/optim au fil de l’eau, non cumulable, rollover max 1 mois).</li>
+                      </ul>
                     </div>
                   </details>
                 </div>
@@ -1013,13 +1080,13 @@
 
                 <div class="cfg-total">
                   <div>
-                    <div class="muted">Total (one-shot)</div>
+                    <div class="muted">À payer maintenant</div>
                     <div class="big" id="cfgTotal">—</div>
                   </div>
                   <div>
-                    <div class="muted">Mensuel</div>
-                    <div class="big" id="cfgMonthly">—</div>
-                  </div>
+	                    <div class="muted">Abonnement</div>
+	                    <div class="big" id="cfgMonthly">—</div>
+	                  </div>
                 </div>
 
                 <div class="cfg-actions">
@@ -1063,10 +1130,16 @@
 	                    <span>Ville</span>
 	                    <input name="ville" autocomplete="address-level2" required />
 	                  </label>
-	                  <label class="span-2">
-	                    <span>Pays</span>
-	                    <input name="pays" autocomplete="country-name" required />
-	                  </label>
+                  <label class="span-2">
+                    <span>Pays</span>
+                    <input name="pays" autocomplete="country-name" required />
+                  </label>
+
+                  <p class="hint span-2">
+                    Pourquoi ces infos ? Certaines plateformes (OVH, programmes d’affiliation) peuvent les exiger pour anti‑fraude/KYC et
+                    pour enregistrer le domaine à ton nom. Utilisées uniquement pour ces démarches (voir la
+                    <a class="link" href="/confidentialite/">politique de confidentialité</a>).
+                  </p>
 	
 	                  <label>
 	                    <span>Date de naissance</span>
@@ -1100,9 +1173,9 @@
                     l’achat/enregistrement d’un nom de domaine chez OVH. Je comprends que certaines plateformes peuvent demander des
 	                    informations personnelles (ex&nbsp;: identité, adresse, date/lieu de naissance, informations société si applicable) et
 	                    j’autorise leur utilisation
-                    strictement pour ces démarches, conformément à la <a class="link" href="/confidentialite/">politique de confidentialité</a>.
+	                    strictement pour ces démarches, conformément à la <a class="link" href="/confidentialite/">politique de confidentialité</a>.
 	                    Tes données bancaires ne sont jamais demandées par E-Com Shop : le paiement se fait via un prestataire (ex. Stripe) et le
-	                    domaine est acheté par <strong>E-Com Shop</strong> et inclus dans le pack
+	                    domaine est acheté/enregistré à ton nom (titulaire/registrant) et inclus dans le pack
 	                    (renouvellement annuel non inclus sauf accord).
                     J’accepte les <a class="link" href="/conditions/">conditions d’utilisation</a>.
                   </span>
@@ -1179,10 +1252,10 @@
 		                  </div>
 		                </div>
 
-		                <p class="cfg-note">
-		                  * Paiement = pack one-shot. Mensuel (si choisi) mis en place après commande. Aucune garantie de revenus/traffic. L’acceptation
-		                  des programmes dépend des plateformes.
-		                </p>
+			                <p class="cfg-note">
+			                  * Paiement = pack one-shot (+ forfait annuel si choisi). Abonnement mensuel (si choisi) mis en place après commande. Aucune garantie de revenus/traffic. L’acceptation
+			                  des programmes dépend des plateformes.
+			                </p>
 
 	                <p class="cfg-note">
 	                  <a class="link" href="/confidentialite/#donnees">En savoir plus</a> sur les données utilisées ·
@@ -1265,13 +1338,13 @@
 	            </details>
 	            <details>
 	              <summary>Tu crées les comptes à ma place ?</summary>
-	              <p>
-	                Oui. Par défaut, on gère le process de bout en bout. Si une plateforme exige une validation du titulaire (email/SMS/KYC),
-	                on te guide sur l’étape (tu le fais en direct), puis on reprend. Le domaine est acheté par E-Com Shop (inclus), sans
-	                demander tes données bancaires. Pour les plateformes qui te rémunèrent (affiliation), les coordonnées de paiement sont
-	                renseignées directement chez le fournisseur.
-	              </p>
-	            </details>
+		              <p>
+		                Oui. Par défaut, on gère le process de bout en bout. Si une plateforme exige une validation du titulaire (email/SMS/KYC),
+		                on te guide sur l’étape (tu le fais en direct), puis on reprend. Le domaine est acheté/enregistré à ton nom (inclus), sans
+		                demander tes données bancaires. Pour les plateformes qui te rémunèrent (affiliation), les coordonnées de paiement sont
+		                renseignées directement chez le fournisseur.
+		              </p>
+		            </details>
             <details>
               <summary>C’est vraiment du revenu passif ?</summary>
               <p>
