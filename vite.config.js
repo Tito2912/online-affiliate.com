@@ -12,6 +12,7 @@ export default defineConfig({
         'contact-merci': resolve(__dirname, 'contact/merci/index.html'),
         blog: resolve(__dirname, 'blog/index.html'),
         'blog-affiliation': resolve(__dirname, 'blog/affiliation/index.html'),
+        'blog-creer-site-affiliation': resolve(__dirname, 'blog/creer-site-affiliation/index.html'),
         'blog-niche': resolve(__dirname, 'blog/niche/index.html'),
         'blog-programmes': resolve(__dirname, 'blog/programmes/index.html'),
         'blog-tracking': resolve(__dirname, 'blog/tracking/index.html'),
