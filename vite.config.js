@@ -9,6 +9,7 @@ export default defineConfig({
         conditions: resolve(__dirname, 'conditions/index.html'),
         confidentialite: resolve(__dirname, 'confidentialite/index.html'),
         contact: resolve(__dirname, 'contact/index.html'),
+        'contact-merci': resolve(__dirname, 'contact/merci/index.html'),
         blog: resolve(__dirname, 'blog/index.html'),
         'blog-affiliation': resolve(__dirname, 'blog/affiliation/index.html'),
         'blog-niche': resolve(__dirname, 'blog/niche/index.html'),

@@ -6,7 +6,7 @@
     <title>Contact — online-affiliate</title>
     <meta
       name="description"
-      content="Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), écris-nous par email."
+      content="Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), envoie-nous un message via formulaire ou email."
     />
     <link rel="canonical" href="https://online-affiliate.com/contact/" />
 
@@ -91,18 +91,103 @@
           <h1 style="margin-top: 0">Contact</h1>
           <p class="muted">
             Le configurateur sert à <strong>commander</strong> un pack standard. Pour toute demande hors pack (sur mesure, cas particulier,
-            volume, options non listées), écris-nous par email.
+            volume, options non listées), envoie-nous un message.
           </p>
+          <div class="hero-actions" style="margin-top: 14px">
+            <a class="btn btn-primary" href="/#configurateur">Composer mon pack</a>
+            <a class="btn" href="/#packs">Voir les packs</a>
+          </div>
 
           <div class="divider"></div>
 
-          <h2 class="h3">Email</h2>
+          <h2 class="h3">Formulaire (demande spéciale)</h2>
+          <p class="muted">Réponse sous 24–48h ouvrées. Plus c’est précis, plus on peut être rapide.</p>
+
+          <form
+            name="demande-speciale"
+            method="POST"
+            data-netlify="true"
+            netlify-honeypot="bot-field"
+            action="/contact/merci/"
+            class="cfg-project"
+          >
+            <input type="hidden" name="form-name" value="demande-speciale" />
+            <p class="sr-only">
+              <label>Ne pas remplir&nbsp;: <input name="bot-field" /></label>
+            </p>
+
+            <div class="form-grid">
+              <label>
+                <span>Nom</span>
+                <input name="nom" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Email</span>
+                <input name="email" type="email" autocomplete="email" required />
+              </label>
+
+              <label class="span-2">
+                <span>Sujet</span>
+                <select name="sujet" required>
+                  <option value="" selected disabled>Choisir…</option>
+                  <option value="Question avant commande">Question avant commande</option>
+                  <option value="Sur-mesure / hors pack">Sur-mesure / hors pack</option>
+                  <option value="Gros volume de contenu">Gros volume de contenu</option>
+                  <option value="Partenariat / affiliation">Partenariat / affiliation</option>
+                  <option value="Proposer une source (blog)">Proposer une source (blog)</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Niche (optionnel)</span>
+                <input name="niche" type="text" placeholder="Ex: maison, animaux, SaaS…" />
+              </label>
+              <label>
+                <span>Langues (optionnel)</span>
+                <input name="langues" type="text" placeholder="Ex: FR, FR+EN" />
+              </label>
+
+              <label>
+                <span>Budget estimé (optionnel)</span>
+                <select name="budget">
+                  <option value="" selected>—</option>
+                  <option value="< 1000€">&lt; 1&nbsp;000€</option>
+                  <option value="1000–2500€">1&nbsp;000–2&nbsp;500€</option>
+                  <option value="2500–5000€">2&nbsp;500–5&nbsp;000€</option>
+                  <option value="> 5000€">&gt; 5&nbsp;000€</option>
+                </select>
+              </label>
+              <label>
+                <span>Délai (optionnel)</span>
+                <select name="delai">
+                  <option value="" selected>—</option>
+                  <option value="ASAP (7–14 jours)">ASAP (7–14 jours)</option>
+                  <option value="1 mois">1 mois</option>
+                  <option value="2–3 mois">2–3 mois</option>
+                  <option value="Flexible">Flexible</option>
+                </select>
+              </label>
+
+              <label class="span-2">
+                <span>Message</span>
+                <textarea name="message" required placeholder="Explique ta demande (objectif, volume, contraintes, liens utiles)…"></textarea>
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Envoyer</button>
+            <p class="cfg-note" style="margin-top: 10px">
+              En envoyant, tu acceptes la <a class="link" href="/confidentialite/">politique de confidentialité</a>.
+            </p>
+          </form>
+
+          <div class="divider"></div>
+
+          <h2 class="h3">Email (si tu préfères)</h2>
           <p class="muted">
             <a class="link" href="mailto:contact.ecomshopfrance@gmail.com?subject=Demande%20sp%C3%A9ciale%20(hors%20pack)%20%E2%80%94%20online-affiliate.com"
               >contact.ecomshopfrance@gmail.com</a
             >
           </p>
-          <p class="muted">Merci d’indiquer : ta niche, tes objectifs, le nombre de langues, et les contraintes/délais.</p>
         </article>
       </div>
     </main>

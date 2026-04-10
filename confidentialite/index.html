@@ -89,7 +89,7 @@
       <div class="container">
         <article class="cfg-card">
           <h1 style="margin-top: 0">Politique de confidentialité</h1>
-          <p class="muted">Dernière mise à jour : 8 avril 2026.</p>
+          <p class="muted">Dernière mise à jour : 10 avril 2026.</p>
 	          <p class="muted">
 	            Cette page explique quelles données sont utilisées, pourquoi, et avec qui elles peuvent être partagées lorsqu’une
 	            <strong>commande</strong> est passée via le configurateur (puis paiement), puis lorsqu’une prestation est réalisée (création de
@@ -118,7 +118,8 @@
             email, montant) ainsi qu’un instantané de commande (options, totaux et informations fournies) via les métadonnées Stripe, afin de
             permettre le traitement et le suivi de la commande. Après confirmation du paiement, la page “Merci” transmet aussi les détails de
             la commande à <strong>E-Com Shop</strong> via un formulaire Netlify (formulaire <strong>“commande”</strong>) afin de lancer
-            l’onboarding et les démarches de mise en place.
+            l’onboarding et les démarches de mise en place. La page <strong>Contact</strong> peut aussi transmettre une demande spéciale via
+            un formulaire Netlify (formulaire <strong>“demande-speciale”</strong>).
           </p>
 
           <div class="table-wrap table-stack" role="region" aria-label="Tableau des données traitées" tabindex="0">
@@ -146,6 +147,13 @@
 	                  <td>Onboarding, récupération/2FA</td>
 	                  <td>E-Com Shop, Netlify (formulaire “commande”), Stripe (email + métadonnées de commande), fournisseurs (Google, OVH, etc.)</td>
                   <td>Idem</td>
+                </tr>
+                <tr>
+                  <td>Demande spéciale / contact</td>
+                  <td>Nom, email, sujet, message, infos projet (optionnel)</td>
+                  <td>Répondre à une demande avant commande, sur‑mesure, cas particulier</td>
+                  <td>E-Com Shop, Netlify (formulaire “demande-speciale”)</td>
+                  <td>Prospects : 12–24 mois après le dernier contact</td>
                 </tr>
                 <tr>
                   <td>Adresse</td>
