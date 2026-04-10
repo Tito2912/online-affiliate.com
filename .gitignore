@@ -27,3 +27,7 @@ online-affiliate-486605-08572b3a20fa.json
 
 # Local Netlify folder
 .netlify
+
+# Logs
+gcm-diagnose.log
+gcm-*.log
