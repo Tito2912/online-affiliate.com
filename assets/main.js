@@ -48,6 +48,8 @@ const I18N = {
     paymentError: (status) => `Erreur paiement (${status})`,
     invalidPaymentResponse: "Réponse paiement invalide.",
     startPaymentFail: "Impossible de démarrer le paiement.",
+    toPaymentWithAmount: (amount) => `Passer au paiement (${amount})`,
+    payNowWithAmount: (amount) => `Payer maintenant (${amount})`,
   },
   en: {
     locale: "en-GB",
@@ -87,10 +89,33 @@ const I18N = {
     paymentError: (status) => `Payment error (${status})`,
     invalidPaymentResponse: "Invalid payment response.",
     startPaymentFail: "Couldn’t start payment.",
+    toPaymentWithAmount: (amount) => `Proceed to payment (${amount})`,
+    payNowWithAmount: (amount) => `Pay now (${amount})`,
   },
 };
 
 const S = I18N[UI_LANG] || I18N.fr;
+
+function trackEvent(eventName, params = {}) {
+  const cleanParams = params && typeof params === "object" ? params : {};
+
+  try {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", eventName, cleanParams);
+    }
+  } catch {}
+
+  try {
+    if (typeof window.plausible === "function") {
+      window.plausible(eventName, { props: cleanParams });
+    }
+  } catch {}
+
+  try {
+    if (!Array.isArray(window.dataLayer)) window.dataLayer = [];
+    window.dataLayer.push({ event: eventName, ...cleanParams });
+  } catch {}
+}
 
 function moneyEUR(amount) {
   return new Intl.NumberFormat(S.locale, { style: "currency", currency: "EUR" }).format(amount);
@@ -522,6 +547,7 @@ function setupConfigurator(root) {
     const totalOneShot = lines.reduce((sum, it) => sum + it.price, 0);
     const payNow = totalOneShot + (monthly.period === "year" ? monthly.price : 0);
     const payNowText = moneyEUR(payNow);
+    const payNowShort = euroShort(payNow);
 
     if (linesEl) {
       linesEl.innerHTML =
@@ -544,6 +570,10 @@ function setupConfigurator(root) {
     if (recapField) recapField.value = buildRecap(lines, totalOneShot, monthly.price, monthly.period);
     if (langCountField) langCountField.value = String(lang.count);
     if (langsSelectedField) langsSelectedField.value = lang.selected.join(", ");
+
+    if (submitBtn && typeof S.toPaymentWithAmount === "function") {
+      submitBtn.textContent = S.toPaymentWithAmount(payNowShort);
+    }
 
     updateSubmitState();
   }
@@ -599,6 +629,7 @@ function setupConfigurator(root) {
       await navigator.clipboard.writeText(recapField?.value || "");
       copyBtn.textContent = S.copied;
       setTimeout(() => (copyBtn.textContent = S.copyRecap), 1200);
+      trackEvent("copy_recap", { lang: UI_LANG });
     } catch {
       alert(S.copyFail);
     }
@@ -718,6 +749,17 @@ function setupConfigurator(root) {
 
     try {
       sessionStorage.setItem(orderKey, JSON.stringify(order));
+      trackEvent("begin_checkout", {
+        currency: "EUR",
+        value: Number(order?.totals?.oneShot || 0) + (String(order?.totals?.monthlyPeriod || "").toLowerCase() === "year" ? Number(order?.totals?.monthly || 0) : 0),
+        one_shot: Number(order?.totals?.oneShot || 0),
+        subscription: Number(order?.totals?.monthly || 0),
+        subscription_period: String(order?.totals?.monthlyPeriod || "month"),
+        lang: UI_LANG,
+        lang_count: Number(order?.config?.langCount || 1),
+        content_pack: Number(order?.config?.contentPack || 150),
+        aff_extra: Number(order?.config?.affExtra || 0),
+      });
       e.preventDefault();
       window.location.href = `${BASE_PREFIX}/paiement/`;
     } catch {
@@ -781,6 +823,7 @@ function setupConfigurator(root) {
     if (monthlyRadio) monthlyRadio.checked = true;
 
     render();
+    trackEvent("preset_applied", { preset: String(presetName || ""), lang: UI_LANG });
     return true;
   }
 
@@ -826,6 +869,7 @@ function setupCheckout() {
   const payNow = oneShot + (monthlyPeriod === "year" ? monthly : 0);
   totalEl.textContent = moneyEUR(payNow);
   monthlyEl.textContent = `${moneyEUR(monthly)} / ${monthlyPeriod === "year" ? S.periodYear : S.periodMonth}`;
+  if (typeof S.payNowWithAmount === "function") payBtn.textContent = S.payNowWithAmount(euroShort(payNow));
 
   if (!order.config?.consent) {
     payBtn.disabled = true;
@@ -840,6 +884,17 @@ function setupCheckout() {
     payBtn.textContent = S.redirecting;
 
     try {
+      trackEvent("add_payment_info", {
+        currency: "EUR",
+        value: payNow,
+        one_shot: oneShot,
+        subscription: monthly,
+        subscription_period: monthlyPeriod,
+        lang: UI_LANG,
+        lang_count: Number(order?.config?.langCount || 1),
+        content_pack: Number(order?.config?.contentPack || 150),
+        aff_extra: Number(order?.config?.affExtra || 0),
+      });
       const checkoutOrder = {
         createdAt: order?.createdAt || "",
         uiLang: order?.uiLang || UI_LANG,
@@ -929,6 +984,11 @@ function setupThankYou() {
   const company = order.customer.company || {};
   const project = order.project || {};
   const totals = order.totals || {};
+  const monthlyPeriod =
+    String(totals.monthlyPeriod || order.config?.monthlyPeriod || "month").toLowerCase() === "year" ? "year" : "month";
+  const oneShot = Number(totals.oneShot ?? 0);
+  const monthly = Number(totals.monthly ?? 0);
+  const payNow = oneShot + (monthlyPeriod === "year" ? monthly : 0);
 
 	  const fields = {
     stripe_session_id: stripeSessionId,
@@ -957,6 +1017,19 @@ function setupThankYou() {
 	    recap: String(order.recap || ""),
 	    config_json: JSON.stringify(order.config || {}),
 	  };
+
+  trackEvent("purchase", {
+    transaction_id: stripeSessionId,
+    currency: "EUR",
+    value: payNow,
+    one_shot: oneShot,
+    subscription: monthly,
+    subscription_period: monthlyPeriod,
+    lang: String(order?.uiLang || UI_LANG),
+    lang_count: Number(order?.config?.langCount || 1),
+    content_pack: Number(order?.config?.contentPack || 150),
+    aff_extra: Number(order?.config?.affExtra || 0),
+  });
 
   submitNetlifyForm("commande", fields)
     .then((ok) => {
