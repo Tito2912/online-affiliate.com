@@ -1,26 +1,26 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Contact — online-affiliate</title>
     <meta
       name="description"
-      content="Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), envoie-nous un message via formulaire ou email."
+      content="Contact online-affiliate (E-Com Shop). For any request outside the configurator pack (custom scope, special case), send us a message via the form or email."
     />
-    <link rel="canonical" href="https://online-affiliate.com/contact/" />
+    <link rel="canonical" href="https://online-affiliate.com/en/contact/" />
     <link rel="alternate" hreflang="fr" href="https://online-affiliate.com/contact/" />
     <link rel="alternate" hreflang="en" href="https://online-affiliate.com/en/contact/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="online-affiliate" />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content="Contact — online-affiliate" />
     <meta
       property="og:description"
-      content="Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), écris-nous par email."
+      content="Contact online-affiliate (E-Com Shop). For any request outside the configurator pack (custom scope, special case), send us a message via the form or email."
     />
-    <meta property="og:url" content="https://online-affiliate.com/contact/" />
+    <meta property="og:url" content="https://online-affiliate.com/en/contact/" />
     <meta property="og:image" content="https://online-affiliate.com/assets/og-image.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -29,7 +29,7 @@
     <meta name="twitter:title" content="Contact — online-affiliate" />
     <meta
       name="twitter:description"
-      content="Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), écris-nous par email."
+      content="Contact online-affiliate (E-Com Shop). For any request outside the configurator pack (custom scope, special case), send us a message via the form or email."
     />
     <meta name="twitter:image" content="https://online-affiliate.com/assets/og-image.png" />
 
@@ -57,21 +57,21 @@
           },
           {
             "@type": "WebSite",
-            "@id": "https://online-affiliate.com/#website",
-            "url": "https://online-affiliate.com/",
+            "@id": "https://online-affiliate.com/en/#website",
+            "url": "https://online-affiliate.com/en/",
             "name": "online-affiliate",
             "publisher": { "@id": "https://online-affiliate.com/#organization" },
-            "inLanguage": "fr-FR"
+            "inLanguage": "en-US"
           },
           {
             "@type": "WebPage",
-            "@id": "https://online-affiliate.com/contact/#webpage",
-            "url": "https://online-affiliate.com/contact/",
+            "@id": "https://online-affiliate.com/en/contact/#webpage",
+            "url": "https://online-affiliate.com/en/contact/",
             "name": "Contact — online-affiliate",
-            "description": "Contact online-affiliate (E-Com Shop). Pour toute demande hors pack/configurateur (sur mesure, cas particulier), écris-nous par email.",
-            "isPartOf": { "@id": "https://online-affiliate.com/#website" },
+            "description": "Contact online-affiliate (E-Com Shop). For any request outside the configurator pack (custom scope, special case), send us a message via the form or email.",
+            "isPartOf": { "@id": "https://online-affiliate.com/en/#website" },
             "about": { "@id": "https://online-affiliate.com/#organization" },
-            "inLanguage": "fr-FR"
+            "inLanguage": "en-US"
           }
         ]
       }
@@ -92,35 +92,35 @@
         <article class="cfg-card">
           <h1 style="margin-top: 0">Contact</h1>
           <p class="muted">
-            Le configurateur sert à <strong>commander</strong> un pack standard. Pour toute demande hors pack (sur mesure, cas particulier,
-            volume, options non listées), envoie-nous un message.
+            The configurator is made to <strong>order</strong> a standard pack. For any request outside the pack (custom scope, special
+            case, volume, options not listed), send us a message.
           </p>
           <div class="hero-actions" style="margin-top: 14px">
-            <a class="btn btn-primary" href="/#configurateur">Composer mon pack</a>
-            <a class="btn" href="/#packs">Voir les packs</a>
+            <a class="btn btn-primary" href="/en/#configurateur">Build my pack</a>
+            <a class="btn" href="/en/#packs">See packs</a>
           </div>
 
           <div class="divider"></div>
 
-          <h2 class="h3">Formulaire (demande spéciale)</h2>
-          <p class="muted">Réponse sous 24–48h ouvrées. Plus c’est précis, plus on peut être rapide.</p>
+          <h2 class="h3">Form (special request)</h2>
+          <p class="muted">Reply within 24–48 business hours. The more precise you are, the faster we can help.</p>
 
           <form
             name="demande-speciale"
             method="POST"
             data-netlify="true"
             netlify-honeypot="bot-field"
-            action="/contact/merci/"
+            action="/en/contact/merci/"
             class="cfg-project"
           >
             <input type="hidden" name="form-name" value="demande-speciale" />
             <p class="sr-only">
-              <label>Ne pas remplir&nbsp;: <input name="bot-field" /></label>
+              <label>Do not fill: <input name="bot-field" /></label>
             </p>
 
             <div class="form-grid">
               <label>
-                <span>Nom</span>
+                <span>Name</span>
                 <input name="nom" type="text" autocomplete="name" required />
               </label>
               <label>
@@ -129,64 +129,66 @@
               </label>
 
               <label class="span-2">
-                <span>Sujet</span>
+                <span>Topic</span>
                 <select name="sujet" required>
-                  <option value="" selected disabled>Choisir…</option>
-                  <option value="Question avant commande">Question avant commande</option>
-                  <option value="Sur-mesure / hors pack">Sur-mesure / hors pack</option>
-                  <option value="Gros volume de contenu">Gros volume de contenu</option>
-                  <option value="Partenariat / affiliation">Partenariat / affiliation</option>
-                  <option value="Proposer une source (blog)">Proposer une source (blog)</option>
+                  <option value="" selected disabled>Select…</option>
+                  <option value="Question before ordering">Question before ordering</option>
+                  <option value="Custom / outside pack">Custom / outside pack</option>
+                  <option value="Large content volume">Large content volume</option>
+                  <option value="Partnership / affiliation">Partnership / affiliation</option>
+                  <option value="Suggest a source (blog)">Suggest a source (blog)</option>
                 </select>
               </label>
 
               <label>
-                <span>Niche (optionnel)</span>
-                <input name="niche" type="text" placeholder="Ex: maison, animaux, SaaS…" />
+                <span>Niche (optional)</span>
+                <input name="niche" type="text" placeholder="e.g., home, pets, SaaS…" />
               </label>
               <label>
-                <span>Langues (optionnel)</span>
-                <input name="langues" type="text" placeholder="Ex: FR, FR+EN" />
+                <span>Languages (optional)</span>
+                <input name="langues" type="text" placeholder="e.g., EN, FR+EN" />
               </label>
 
               <label>
-                <span>Budget estimé (optionnel)</span>
+                <span>Estimated budget (optional)</span>
                 <select name="budget">
                   <option value="" selected>—</option>
-                  <option value="< 1000€">&lt; 1&nbsp;000€</option>
-                  <option value="1000–2500€">1&nbsp;000–2&nbsp;500€</option>
-                  <option value="2500–5000€">2&nbsp;500–5&nbsp;000€</option>
-                  <option value="> 5000€">&gt; 5&nbsp;000€</option>
+                  <option value="< 1000€">&lt; €1,000</option>
+                  <option value="1000–2500€">€1,000–€2,500</option>
+                  <option value="2500–5000€">€2,500–€5,000</option>
+                  <option value="> 5000€">&gt; €5,000</option>
                 </select>
               </label>
               <label>
-                <span>Délai (optionnel)</span>
+                <span>Timeline (optional)</span>
                 <select name="delai">
                   <option value="" selected>—</option>
-                  <option value="ASAP (7–14 jours)">ASAP (7–14 jours)</option>
-                  <option value="1 mois">1 mois</option>
-                  <option value="2–3 mois">2–3 mois</option>
+                  <option value="ASAP (7–14 days)">ASAP (7–14 days)</option>
+                  <option value="1 month">1 month</option>
+                  <option value="2–3 months">2–3 months</option>
                   <option value="Flexible">Flexible</option>
                 </select>
               </label>
 
               <label class="span-2">
                 <span>Message</span>
-                <textarea name="message" required placeholder="Explique ta demande (objectif, volume, contraintes, liens utiles)…"></textarea>
+                <textarea name="message" required placeholder="Explain your request (goal, volume, constraints, useful links)…"></textarea>
               </label>
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Envoyer</button>
+            <button type="submit" class="btn btn-primary btn-block">Send</button>
             <p class="cfg-note" style="margin-top: 10px">
-              En envoyant, tu acceptes la <a class="link" href="/confidentialite/">politique de confidentialité</a>.
+              By sending, you accept the <a class="link" href="/en/confidentialite/">privacy policy</a>.
             </p>
           </form>
 
           <div class="divider"></div>
 
-          <h2 class="h3">Email (si tu préfères)</h2>
+          <h2 class="h3">Email (if you prefer)</h2>
           <p class="muted">
-            <a class="link" href="mailto:contact.ecomshopfrance@gmail.com?subject=Demande%20sp%C3%A9ciale%20(hors%20pack)%20%E2%80%94%20online-affiliate.com"
+            <a
+              class="link"
+              href="mailto:contact.ecomshopfrance@gmail.com?subject=Special%20request%20(outside%20pack)%20%E2%80%94%20online-affiliate.com"
               >contact.ecomshopfrance@gmail.com</a
             >
           </p>

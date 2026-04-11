@@ -2,16 +2,102 @@ import { injectLayout } from './layout.js';
 import { setupHeroBackground } from './hero-background.js';
 
 // Determine the current page path for active link highlighting
-const currentPage = window.location.pathname;
+const currentPage = window.location.pathname || "/";
+const UI_LANG = currentPage === "/en" || currentPage.startsWith("/en/") ? "en" : "fr";
+const BASE_PREFIX = UI_LANG === "en" ? "/en" : "";
 injectLayout(currentPage);
 
+const I18N = {
+  fr: {
+    locale: "fr-FR",
+    recapTitle: "Récap pack",
+    payNow: "À payer maintenant",
+    oneShot: "Pack one-shot",
+    subscription: "Abonnement",
+    periodMonth: "mois",
+    periodYear: "an",
+    genericOption: "Option",
+    languagesLine: (labels) => `Langues : ${labels.join(", ")}`,
+    multiLangOption: (extraCount) => `Option multi-langue (+${extraCount} ${extraCount > 1 ? "langues" : "langue"})`,
+    languagesMultiplier: (count) => `×${count} langues`,
+    languagesHint: (count, selectedLabels) => {
+      const plural = count > 1 ? "langues" : "langue";
+      return `Choisis ${count} ${plural}. Sélection actuelle : ${selectedLabels.join(", ")}. Packs de contenu = par langue. (Multi-langue = structure + hreflang + gabarits.)`;
+    },
+    contentFallback: "Contenu: 1 page",
+    contentLabel: "Contenu",
+    monthlyNone: "Abonnement: aucun",
+    monthlyLabel: "Abonnement",
+    businessDaysSingle: (days) => `${days} jours ouvrés`,
+    businessDaysRange: (min, max) => `${min}–${max} jours ouvrés`,
+    pagesLabel: (pages) => (pages === 1 ? "1 page" : `${pages} pages`),
+    tierSeoLabel: (pagesLabel) => `Architecture SEO (silos + plan de maillage) — palier ${pagesLabel}`,
+    tierSchemaLabel: (pagesLabel) => `Schema (FAQ/Review — selon gabarits) — palier ${pagesLabel}`,
+    affExtraFallback: "Programme affilié supplémentaire",
+    noneSelected: "Aucune option sélectionnée.",
+    copyRecap: "Copier le récap",
+    copied: "Copié",
+    copyFail: "Impossible de copier automatiquement. Tu peux sélectionner le texte puis copier.",
+    consentRequired: "Merci de cocher la case d’autorisation avant de passer au paiement.",
+    chooseExactLangs: (count, current) => `Choisis exactement ${count} langue(s) (actuellement : ${current}).`,
+    chooseDistinctLangs: "Merci de choisir des langues différentes (pas de doublons).",
+    prepOrderFail: "Impossible de préparer la commande (stockage navigateur). Essaie un autre navigateur ou désactive le mode privé.",
+    recapUnavailable: "Récap indisponible.",
+    backToConsent: "Retour pour valider l’autorisation",
+    redirecting: "Redirection…",
+    paymentError: (status) => `Erreur paiement (${status})`,
+    invalidPaymentResponse: "Réponse paiement invalide.",
+    startPaymentFail: "Impossible de démarrer le paiement.",
+  },
+  en: {
+    locale: "en-GB",
+    recapTitle: "Order recap",
+    payNow: "Pay now",
+    oneShot: "One-shot pack",
+    subscription: "Subscription",
+    periodMonth: "month",
+    periodYear: "year",
+    genericOption: "Option",
+    languagesLine: (labels) => `Languages: ${labels.join(", ")}`,
+    multiLangOption: (extraCount) => `Multi-language option (+${extraCount} ${extraCount === 1 ? "language" : "languages"})`,
+    languagesMultiplier: (count) => `×${count} languages`,
+    languagesHint: (count, selectedLabels) =>
+      `Choose ${count} ${count === 1 ? "language" : "languages"}. Current selection: ${selectedLabels.join(", ")}. Content packs are per language. (Multi-language = structure + hreflang + templates.)`,
+    contentFallback: "Content: 1 page",
+    contentLabel: "Content",
+    monthlyNone: "Subscription: none",
+    monthlyLabel: "Subscription",
+    businessDaysSingle: (days) => `${days} business day${days === 1 ? "" : "s"}`,
+    businessDaysRange: (min, max) => `${min}–${max} business days`,
+    pagesLabel: (pages) => (pages === 1 ? "1 page" : `${pages} pages`),
+    tierSeoLabel: (pagesLabel) => `SEO architecture (silos + internal linking plan) — tier ${pagesLabel}`,
+    tierSchemaLabel: (pagesLabel) => `Schema (FAQ/Review — templates) — tier ${pagesLabel}`,
+    affExtraFallback: "Extra affiliate program",
+    noneSelected: "No option selected.",
+    copyRecap: "Copy recap",
+    copied: "Copied",
+    copyFail: "Couldn’t copy automatically. You can select the text and copy it.",
+    consentRequired: "Please tick the authorization box before proceeding to payment.",
+    chooseExactLangs: (count, current) => `Please choose exactly ${count} language(s) (currently: ${current}).`,
+    chooseDistinctLangs: "Please choose different languages (no duplicates).",
+    prepOrderFail: "Couldn’t prepare the order (browser storage). Try another browser or disable private mode.",
+    recapUnavailable: "Recap unavailable.",
+    backToConsent: "Back to authorization",
+    redirecting: "Redirecting…",
+    paymentError: (status) => `Payment error (${status})`,
+    invalidPaymentResponse: "Invalid payment response.",
+    startPaymentFail: "Couldn’t start payment.",
+  },
+};
+
+const S = I18N[UI_LANG] || I18N.fr;
 
 function moneyEUR(amount) {
-  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(amount);
+  return new Intl.NumberFormat(S.locale, { style: "currency", currency: "EUR" }).format(amount);
 }
 
 function euroShort(amount) {
-  return `${new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(amount)}€`;
+  return `${new Intl.NumberFormat(S.locale, { maximumFractionDigits: 0 }).format(amount)}€`;
 }
 
 function clampInt(value, min, max) {
@@ -22,17 +108,19 @@ function clampInt(value, min, max) {
 
 function buildRecap(lines, totalOneShot, recurringAmount, recurringPeriod = "month") {
   const parts = [];
-  parts.push("Récap pack");
+  parts.push(S.recapTitle);
   for (const line of lines) {
     if (line.price > 0) parts.push(`- ${line.label} : ${moneyEUR(line.price)}`);
     else parts.push(`- ${line.label}`);
   }
   parts.push("");
-  const period = String(recurringPeriod || "month").toLowerCase() === "year" ? "an" : "mois";
-  const payNow = totalOneShot + (period === "an" ? recurringAmount : 0);
-  parts.push(`À payer maintenant : ${moneyEUR(payNow)}`);
-  parts.push(`Pack one-shot : ${moneyEUR(totalOneShot)}`);
-  parts.push(`Abonnement : ${moneyEUR(recurringAmount)} / ${period}`);
+  const recurring = String(recurringPeriod || "month").toLowerCase();
+  const isAnnual = recurring === "year";
+  const periodLabel = isAnnual ? S.periodYear : S.periodMonth;
+  const payNow = totalOneShot + (isAnnual ? recurringAmount : 0);
+  parts.push(`${S.payNow} : ${moneyEUR(payNow)}`);
+  parts.push(`${S.oneShot} : ${moneyEUR(totalOneShot)}`);
+  parts.push(`${S.subscription} : ${moneyEUR(recurringAmount)} / ${periodLabel}`);
   return parts.join("\n");
 }
 
@@ -107,6 +195,10 @@ function setupConfigurator(root) {
     { value: "pl", label: "Polski (PL)" },
   ];
 
+  const DEFAULT_SITE_LANG = UI_LANG === "en" ? "en" : "fr";
+  const DEFAULT_SITE_LANG_LABEL =
+    LANG_CHOICES.find((c) => c.value === DEFAULT_SITE_LANG)?.label || LANG_CHOICES[0]?.label || DEFAULT_SITE_LANG;
+
   const aff1 = document.getElementById("aff1");
   const affExtraInput = document.getElementById("affExtra");
   const qtyButtons = Array.from(root.querySelectorAll(".qty-btn"));
@@ -118,7 +210,7 @@ function setupConfigurator(root) {
     return Array.from(root.querySelectorAll('input[type="checkbox"][data-price]'))
       .filter((input) => input.checked)
       .map((input) => ({
-        label: input.dataset.label || "Option",
+        label: input.dataset.label || S.genericOption,
         price: Number(input.dataset.price || 0),
       }));
   }
@@ -148,7 +240,7 @@ function setupConfigurator(root) {
       input.setAttribute("data-lang-opt", "true");
       input.setAttribute("data-lang-label", choice.label);
 
-      if (choice.value === "fr") input.checked = true;
+      if (choice.value === DEFAULT_SITE_LANG) input.checked = true;
 
       const text = document.createElement("span");
       text.textContent = choice.label;
@@ -162,15 +254,15 @@ function setupConfigurator(root) {
   function getSelectedLangValues() {
     const opts = getLangOptionEls();
     const selected = opts.filter((o) => o.checked).map((o) => String(o.value || "").trim()).filter(Boolean);
-    return selected.length ? selected : ["fr"];
+    return selected.length ? selected : [DEFAULT_SITE_LANG];
   }
 
   function getSelectedLangLabels() {
     const opts = getLangOptionEls();
     const labels = opts
       .filter((o) => o.checked)
-      .map((o) => o.dataset.langLabel || o.getAttribute("data-lang-label") || o.value || "Langue");
-    return labels.length ? labels : ["Français (FR)"];
+      .map((o) => o.dataset.langLabel || o.getAttribute("data-lang-label") || o.value || (UI_LANG === "en" ? "Language" : "Langue"));
+    return labels.length ? labels : [DEFAULT_SITE_LANG_LABEL];
   }
 
   let lastLangChanged = null;
@@ -187,8 +279,8 @@ function setupConfigurator(root) {
 
     // Ensure at least one is selected.
     if (!opts.some((o) => o.checked)) {
-      const fr = opts.find((o) => o.value === "fr") || opts[0];
-      fr.checked = true;
+      const fallback = opts.find((o) => o.value === DEFAULT_SITE_LANG) || opts[0];
+      fallback.checked = true;
     }
 
     // When count === 1, behave like radio (easy switching).
@@ -219,10 +311,7 @@ function setupConfigurator(root) {
       langSummaryText.textContent = labels.join(", ");
     }
 
-    if (langHint) {
-      const plural = count > 1 ? "langues" : "langue";
-      langHint.textContent = `Choisis ${count} ${plural}. Sélection actuelle : ${getSelectedLangLabels().join(", ")}. Packs de contenu = par langue. (Multi-langue = structure + hreflang + gabarits.)`;
-    }
+    if (langHint) langHint.textContent = S.languagesHint(count, getSelectedLangLabels());
   }
 
   function getLanguagePricing() {
@@ -239,16 +328,16 @@ function setupConfigurator(root) {
 
   function getContentPack() {
     const r = root.querySelector('input[name="contentPack"]:checked');
-    if (!r) return { label: "Contenu: 1 page", price: 150 };
-    return { label: r.dataset.label || "Contenu", price: Number(r.value || 0) };
+    if (!r) return { label: S.contentFallback, price: 150 };
+    return { label: r.dataset.label || S.contentLabel, price: Number(r.value || 0) };
   }
 
   function getMonthly() {
     const r = root.querySelector('input[name="monthly"]:checked');
-    if (!r) return { label: "Abonnement: aucun", price: 0, period: "month" };
+    if (!r) return { label: S.monthlyNone, price: 0, period: "month" };
     const periodRaw = String(r.dataset.period || "month").toLowerCase();
     const period = periodRaw === "year" ? "year" : "month";
-    return { label: r.dataset.label || "Abonnement", price: Number(r.value || 0), period };
+    return { label: r.dataset.label || S.monthlyLabel, price: Number(r.value || 0), period };
   }
 
   function getChecksState() {
@@ -337,19 +426,19 @@ function setupConfigurator(root) {
     const minDays = Number(range.minDays || 0);
     const maxDays = Number(range.maxDays || 0);
     if (!Number.isFinite(minDays) || !Number.isFinite(maxDays) || minDays <= 0 || maxDays <= 0) return "—";
-    if (minDays === maxDays) return `${minDays} jours ouvrés`;
-    return `${minDays}–${maxDays} jours ouvrés`;
+    if (minDays === maxDays) return S.businessDaysSingle(minDays);
+    return S.businessDaysRange(minDays, maxDays);
   }
 
   function applyTieredOptionPrices(pagesPerLang) {
     const safePages = clampInt(pagesPerLang ?? 1, 1, 20);
-    const pagesLabel = safePages === 1 ? "1 page" : `${safePages} pages`;
+    const pagesLabel = S.pagesLabel(safePages);
 
     const seoInput = root.querySelector('input[type="checkbox"][name="seo_silos"]');
     if (seoInput) {
       const seoPrice = safePages >= 20 ? 490 : safePages >= 10 ? 390 : 290;
       seoInput.dataset.price = String(seoPrice);
-      seoInput.dataset.label = `Architecture SEO (silos + plan de maillage) — palier ${pagesLabel}`;
+      seoInput.dataset.label = S.tierSeoLabel(pagesLabel);
       const strong = seoInput.closest(".cfg-row")?.querySelector("strong");
       if (strong) strong.textContent = euroShort(seoPrice);
     }
@@ -358,7 +447,7 @@ function setupConfigurator(root) {
     if (schemaInput) {
       const schemaPrice = safePages >= 20 ? 290 : safePages >= 10 ? 240 : 190;
       schemaInput.dataset.price = String(schemaPrice);
-      schemaInput.dataset.label = `Schema (FAQ/Review — selon gabarits) — palier ${pagesLabel}`;
+      schemaInput.dataset.label = S.tierSchemaLabel(pagesLabel);
       const strong = schemaInput.closest(".cfg-row")?.querySelector("strong");
       if (strong) strong.textContent = euroShort(schemaPrice);
     }
@@ -370,7 +459,7 @@ function setupConfigurator(root) {
     const qty = clampInt(qtyRaw, 0, 20);
     if (affExtraInput) affExtraInput.value = String(qty);
     if (qty <= 0) return null;
-    const labelBase = affExtraInput?.dataset.label || "Programme affilié supplémentaire";
+    const labelBase = affExtraInput?.dataset.label || S.affExtraFallback;
     return { label: `${labelBase} ×${qty}`, price: qty * unit };
   }
 
@@ -405,17 +494,16 @@ function setupConfigurator(root) {
     const lines = [];
     lines.push(...getCheckedCheckboxes());
 
-    lines.push({ label: `Langues : ${lang.selected.join(", ")}`, price: 0, alwaysShow: true });
+    lines.push({ label: S.languagesLine(lang.selected), price: 0, alwaysShow: true });
     if (lang.extraCount > 0) {
-      const plural = lang.extraCount > 1 ? "langues" : "langue";
-      lines.push({ label: `Option multi-langue (+${lang.extraCount} ${plural})`, price: lang.extraPrice });
+      lines.push({ label: S.multiLangOption(lang.extraCount), price: lang.extraPrice });
     }
 
     const extra = getAffExtra();
     if (extra) lines.push(extra);
 
     if (content.price > 0) {
-      const label = lang.count > 1 ? `${content.label} (×${lang.count} langues)` : content.label;
+      const label = lang.count > 1 ? `${content.label} (${S.languagesMultiplier(lang.count)})` : content.label;
       lines.push({ label, price: content.price * lang.count });
     }
 
@@ -443,11 +531,11 @@ function setupConfigurator(root) {
             const price = it.price > 0 ? moneyEUR(it.price) : "—";
             return `<div class="line"><span>${it.label}</span><strong>${price}</strong></div>`;
           })
-          .join("") || `<div class="muted">Aucune option sélectionnée.</div>`;
+          .join("") || `<div class="muted">${S.noneSelected}</div>`;
     }
 
     if (totalEl) totalEl.textContent = payNowText;
-    const periodLabel = monthly.period === "year" ? "an" : "mois";
+    const periodLabel = monthly.period === "year" ? S.periodYear : S.periodMonth;
     if (monthlyEl) monthlyEl.textContent = `${moneyEUR(monthly.price)} / ${periodLabel}`;
 
     if (totalOneShotField) totalOneShotField.value = String(totalOneShot);
@@ -509,10 +597,10 @@ function setupConfigurator(root) {
   copyBtn?.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(recapField?.value || "");
-      copyBtn.textContent = "Copié";
-      setTimeout(() => (copyBtn.textContent = "Copier le récap"), 1200);
+      copyBtn.textContent = S.copied;
+      setTimeout(() => (copyBtn.textContent = S.copyRecap), 1200);
     } catch {
-      alert("Impossible de copier automatiquement. Tu peux sélectionner le texte puis copier.");
+      alert(S.copyFail);
     }
   });
 
@@ -521,7 +609,7 @@ function setupConfigurator(root) {
 
     if (opsConsent && !opsConsent.checked) {
       e.preventDefault();
-      alert("Merci de cocher la case d’autorisation avant de passer au paiement.");
+      alert(S.consentRequired);
       return;
     }
 
@@ -531,12 +619,12 @@ function setupConfigurator(root) {
     const unique = new Set(langs);
     if (langs.length !== count) {
       e.preventDefault();
-      alert(`Choisis exactement ${count} langue(s) (actuellement : ${langs.length}).`);
+      alert(S.chooseExactLangs(count, langs.length));
       return;
     }
     if (unique.size !== langs.length) {
       e.preventDefault();
-      alert("Merci de choisir des langues différentes (pas de doublons).");
+      alert(S.chooseDistinctLangs);
       return;
     }
 
@@ -581,6 +669,7 @@ function setupConfigurator(root) {
 
     const order = {
       createdAt: new Date().toISOString(),
+      uiLang: UI_LANG,
       customer: {
         firstName,
         lastName,
@@ -630,10 +719,10 @@ function setupConfigurator(root) {
     try {
       sessionStorage.setItem(orderKey, JSON.stringify(order));
       e.preventDefault();
-      window.location.href = "/paiement/";
+      window.location.href = `${BASE_PREFIX}/paiement/`;
     } catch {
       e.preventDefault();
-      alert("Impossible de préparer la commande (stockage navigateur). Essaie un autre navigateur ou désactive le mode privé.");
+      alert(S.prepOrderFail);
     }
   });
 
@@ -643,7 +732,7 @@ function setupConfigurator(root) {
       sprint: {
         affExtra: 0,
         langCount: 1,
-        langs: ["fr"],
+        langs: [DEFAULT_SITE_LANG],
         checks: {},
         contentPack: "490",
         monthly: "0",
@@ -651,7 +740,7 @@ function setupConfigurator(root) {
       launch: {
         affExtra: 0,
         langCount: 1,
-        langs: ["fr"],
+        langs: [DEFAULT_SITE_LANG],
         checks: { seo_silos: true },
         contentPack: "990",
         monthly: "0",
@@ -659,7 +748,7 @@ function setupConfigurator(root) {
       growth: {
         affExtra: 1,
         langCount: 1,
-        langs: ["fr"],
+        langs: [DEFAULT_SITE_LANG],
         checks: { seo_silos: true, performance: true, schema: true },
         contentPack: "1890",
         monthly: "0",
@@ -674,7 +763,7 @@ function setupConfigurator(root) {
 
     if (langCountInput) langCountInput.value = String(clampInt(preset.langCount ?? 1, 1, Number(langCountInput.max || 8)));
     buildLangOptions();
-    const desired = new Set((Array.isArray(preset.langs) && preset.langs.length ? preset.langs : ["fr"]).map(String));
+    const desired = new Set((Array.isArray(preset.langs) && preset.langs.length ? preset.langs : [DEFAULT_SITE_LANG]).map(String));
     for (const opt of getLangOptionEls()) {
       opt.checked = desired.has(String(opt.value || ""));
     }
@@ -730,17 +819,17 @@ function setupCheckout() {
     return;
   }
 
-  recapEl.textContent = String(order.recap || "").trim() || "Récap indisponible.";
+  recapEl.textContent = String(order.recap || "").trim() || S.recapUnavailable;
   const oneShot = Number(order.totals?.oneShot || 0);
   const monthly = Number(order.totals?.monthly || 0);
   const monthlyPeriod = String(order.totals?.monthlyPeriod || order.config?.monthlyPeriod || "month").toLowerCase() === "year" ? "year" : "month";
   const payNow = oneShot + (monthlyPeriod === "year" ? monthly : 0);
   totalEl.textContent = moneyEUR(payNow);
-  monthlyEl.textContent = `${moneyEUR(monthly)} / ${monthlyPeriod === "year" ? "an" : "mois"}`;
+  monthlyEl.textContent = `${moneyEUR(monthly)} / ${monthlyPeriod === "year" ? S.periodYear : S.periodMonth}`;
 
   if (!order.config?.consent) {
     payBtn.disabled = true;
-    payBtn.textContent = "Retour pour valider l’autorisation";
+    payBtn.textContent = S.backToConsent;
     return;
   }
 
@@ -748,11 +837,12 @@ function setupCheckout() {
   payBtn.addEventListener("click", async () => {
     payBtn.disabled = true;
     const originalText = payBtn.textContent;
-    payBtn.textContent = "Redirection…";
+    payBtn.textContent = S.redirecting;
 
     try {
       const checkoutOrder = {
         createdAt: order?.createdAt || "",
+        uiLang: order?.uiLang || UI_LANG,
         customer: {
           firstName: String(order?.customer?.firstName || "").trim(),
           lastName: String(order?.customer?.lastName || "").trim(),
@@ -789,14 +879,14 @@ function setupCheckout() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(data.error || `Erreur paiement (${res.status})`);
+        throw new Error(data.error || S.paymentError(res.status));
       }
-      if (!data.url) throw new Error("Réponse paiement invalide.");
+      if (!data.url) throw new Error(S.invalidPaymentResponse);
       window.location.href = data.url;
     } catch (err) {
       payBtn.disabled = false;
       payBtn.textContent = originalText;
-      alert(String(err?.message || err || "Impossible de démarrer le paiement."));
+      alert(String(err?.message || err || S.startPaymentFail));
     }
   });
 }

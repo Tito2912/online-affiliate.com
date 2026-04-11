@@ -52,7 +52,10 @@ function getContentPagesPerLang(contentPackPrice) {
   return 1;
 }
 
-function calcTotals(order) {
+function calcTotals(order, uiLang = "fr") {
+  const lang = String(uiLang || "").toLowerCase() === "en" ? "en" : "fr";
+  const msg = (fr, en) => (lang === "en" ? en : fr);
+
   const checks = order?.config?.checks || {};
   const langCount = clampInt(order?.config?.langCount ?? 1, 1, 8);
   const langs = Array.isArray(order?.config?.langs) ? order.config.langs.map((s) => String(s)).filter(Boolean) : [];
@@ -76,28 +79,33 @@ function calcTotals(order) {
     if (monthly === 1089 || monthly === 4939) monthlyPeriod = "year";
     else monthlyPeriod = "month";
   }
-  if (monthlyPeriod !== "month" && monthlyPeriod !== "year") throw new Error("Période d’abonnement invalide.");
+  if (monthlyPeriod !== "month" && monthlyPeriod !== "year") throw new Error(msg("Période d’abonnement invalide.", "Invalid subscription period."));
 
   const allowedPlans = new Set(["99|month", "449|month", "1089|year", "4939|year"]);
   if (monthly !== 0 && !allowedPlans.has(`${monthly}|${monthlyPeriod}`)) {
-    throw new Error("Option d’abonnement invalide.");
+    throw new Error(msg("Option d’abonnement invalide.", "Invalid subscription option."));
   }
 
   if (langs.length !== langCount) {
-    throw new Error(`Langues invalides : ${langs.length} sélectionnées, ${langCount} attendue(s).`);
+    throw new Error(
+      msg(
+        `Langues invalides : ${langs.length} sélectionnées, ${langCount} attendue(s).`,
+        `Invalid languages: ${langs.length} selected, ${langCount} expected.`
+      )
+    );
   }
 
   const unique = new Set(langs);
   if (unique.size !== langs.length) {
-    throw new Error("Langues invalides : doublons.");
+    throw new Error(msg("Langues invalides : doublons.", "Invalid languages: duplicates."));
   }
   for (const lang of langs) {
-    if (!allowedLangs.has(lang)) throw new Error(`Langue non supportée : ${lang}`);
+    if (!allowedLangs.has(lang)) throw new Error(msg(`Langue non supportée : ${lang}`, `Unsupported language: ${lang}`));
   }
 
   const contentPack = Number(order?.config?.contentPack || 150);
   const allowedContent = new Set([150, 490, 990, 1890]);
-  if (!allowedContent.has(contentPack)) throw new Error("Pack contenu invalide.");
+  if (!allowedContent.has(contentPack)) throw new Error(msg("Pack contenu invalide.", "Invalid content pack."));
 
   const pagesPerLang = getContentPagesPerLang(contentPack);
   const pagesLabel = pagesPerLang === 1 ? "1 page" : `${pagesPerLang} pages`;
@@ -193,37 +201,60 @@ exports.handler = async (event) => {
     if (!stripeKey) return json(500, { error: "STRIPE_SECRET_KEY manquant (variable d’environnement Netlify)." });
 
     const order = JSON.parse(event.body || "null");
-    if (!order || !order.customer) return json(400, { error: "Commande invalide." });
+    const uiLangRaw = String(order?.uiLang || order?.ui?.lang || "").trim().toLowerCase();
+    const uiLang = uiLangRaw === "en" ? "en" : "fr";
+    const msg = (fr, en) => (uiLang === "en" ? en : fr);
+    const pathPrefix = uiLang === "en" ? "/en" : "";
+
+    if (!order || !order.customer) return json(400, { error: msg("Commande invalide.", "Invalid order.") });
 
     const email = String(order.customer.email || "").trim();
     const name = String(order.customer.name || "").trim();
-    if (!email || !email.includes("@")) return json(400, { error: "Email invalide." });
+    if (!email || !email.includes("@")) return json(400, { error: msg("Email invalide.", "Invalid email.") });
 
     const niche = String(order?.project?.niche || "").trim();
     const delaiEstime = String(order?.project?.delai_estime || order?.project?.delaiEstime || order?.project?.delai || "").trim();
 
-    const { oneShot, monthly, monthlyPeriod, langCount, langs } = calcTotals(order);
+    const { oneShot, monthly, monthlyPeriod, langCount, langs } = calcTotals(order, uiLang);
     const chargeAnnualNow = monthlyPeriod === "year" && monthly > 0;
     const oneShotCents = Math.round(oneShot * 100);
     const annualCents = chargeAnnualNow ? Math.round(monthly * 100) : 0;
     const payNowCents = oneShotCents + annualCents;
-    if (!Number.isFinite(payNowCents) || payNowCents <= 0) return json(400, { error: "Montant invalide." });
+    if (!Number.isFinite(payNowCents) || payNowCents <= 0) return json(400, { error: msg("Montant invalide.", "Invalid amount.") });
 
     const baseUrl = getBaseUrl(event.headers || {});
 
     const params = new URLSearchParams();
     params.set("mode", "payment");
-    params.set("success_url", `${baseUrl}/merci/?session_id={CHECKOUT_SESSION_ID}`);
-    params.set("cancel_url", `${baseUrl}/paiement/annule/`);
+    params.set("success_url", `${baseUrl}${pathPrefix}/merci/?session_id={CHECKOUT_SESSION_ID}`);
+    params.set("cancel_url", `${baseUrl}${pathPrefix}/paiement/annule/`);
     params.set("customer_email", email);
+    params.set("locale", uiLang === "en" ? "en" : "fr");
 
     params.set("line_items[0][price_data][currency]", "eur");
-    params.set("line_items[0][price_data][product_data][name]", "E-Com Shop — Machine d’affiliation (pack one-shot configuré)");
+    params.set(
+      "line_items[0][price_data][product_data][name]",
+      msg(
+        "E-Com Shop — Machine d’affiliation (pack one-shot configuré)",
+        "E-Com Shop — Affiliate SEO machine (configured one-shot pack)"
+      )
+    );
     params.set("line_items[0][price_data][unit_amount]", String(oneShotCents));
     params.set("line_items[0][quantity]", "1");
 
     if (annualCents > 0) {
-      const annualName = monthly === 1089 ? "Abonnement annuel — Care (1 mois offert)" : monthly === 4939 ? "Abonnement annuel — Growth (1 mois offert)" : "Abonnement annuel";
+      const annualName =
+        uiLang === "en"
+          ? monthly === 1089
+            ? "Annual subscription — Care (1 month free)"
+            : monthly === 4939
+              ? "Annual subscription — Growth (1 month free)"
+              : "Annual subscription"
+          : monthly === 1089
+            ? "Abonnement annuel — Care (1 mois offert)"
+            : monthly === 4939
+              ? "Abonnement annuel — Growth (1 mois offert)"
+              : "Abonnement annuel";
       params.set("line_items[1][price_data][currency]", "eur");
       params.set("line_items[1][price_data][product_data][name]", annualName);
       params.set("line_items[1][price_data][unit_amount]", String(annualCents));
@@ -231,6 +262,7 @@ exports.handler = async (event) => {
     }
 
     params.set("metadata[source]", "online-affiliate.com");
+    params.set("metadata[ui_lang]", uiLang);
     if (name) params.set("metadata[customer_name]", name);
     if (niche) params.set("metadata[niche]", niche);
     if (delaiEstime) params.set("metadata[delai_estime]", delaiEstime.slice(0, 200));
@@ -265,11 +297,11 @@ exports.handler = async (event) => {
 
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
-      const message = data?.error?.message || "Erreur Stripe.";
+      const message = data?.error?.message || msg("Erreur Stripe.", "Stripe error.");
       return json(502, { error: message });
     }
 
-    if (!data.url) return json(502, { error: "Stripe: URL de checkout manquante." });
+    if (!data.url) return json(502, { error: msg("Stripe: URL de checkout manquante.", "Stripe: missing checkout URL.") });
     return json(200, { url: data.url });
   } catch (err) {
     return json(500, { error: String(err?.message || err || "Erreur inconnue.") });

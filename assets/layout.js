@@ -1,48 +1,138 @@
-const headerHTML = `
-<a href="#contenu" class="skip-link">Aller au contenu</a>
+function isEnglishPath(pathname) {
+  const p = String(pathname || "/");
+  return p === "/en" || p.startsWith("/en/");
+}
+
+function getLangPrefix(pathname) {
+  return isEnglishPath(pathname) ? "/en" : "";
+}
+
+function buildAlternatePath(pathname) {
+  const p = String(pathname || "/");
+  if (isEnglishPath(p)) {
+    const stripped = p.replace(/^\/en(?=\/|$)/, "");
+    return stripped || "/";
+  }
+  if (p === "/404.html") return "/";
+  return `/en${p === "/" ? "/" : p}`;
+}
+
+function getStrings(lang) {
+  if (lang === "en") {
+    return {
+      skip: "Skip to content",
+      menu: "Menu",
+      nav: {
+        packs: "Packs",
+        niches: "Niches",
+        order: "Order",
+        process: "Process",
+        faq: "FAQ",
+        blog: "Blog",
+        contact: "Contact",
+        cta: "Order your system",
+      },
+      footerRights: "All rights reserved.",
+      footer: {
+        order: "Order",
+        faq: "FAQ",
+        blog: "Blog",
+        contact: "Contact",
+        legal: "Legal notice",
+        privacy: "Privacy",
+        terms: "Terms",
+      },
+      langSwitch: "FR",
+      langSwitchLabel: "Version française",
+    };
+  }
+
+  return {
+    skip: "Aller au contenu",
+    menu: "Menu",
+    nav: {
+      packs: "Packs",
+      niches: "Niches",
+      order: "Commander",
+      process: "Process",
+      faq: "FAQ",
+      blog: "Blog",
+      contact: "Contact",
+      cta: "Commander ton système",
+    },
+    footerRights: "Tous droits réservés.",
+    footer: {
+      order: "Commander",
+      faq: "FAQ",
+      blog: "Blog",
+      contact: "Contact",
+      legal: "Mentions légales",
+      privacy: "Confidentialité",
+      terms: "Conditions",
+    },
+    langSwitch: "EN",
+    langSwitchLabel: "English version",
+  };
+}
+
+function headerHTML(pathname) {
+  const lang = isEnglishPath(pathname) ? "en" : "fr";
+  const s = getStrings(lang);
+  const base = getLangPrefix(pathname);
+
+  return `
+<a href="#contenu" class="skip-link">${s.skip}</a>
 <header class="site-header">
   <div class="container header-inner">
-    <a class="brand" href="/">
+    <a class="brand" href="${base || "/"}">
       <span class="brand-mark"></span>
       <span class="brand-name">online-affiliate</span>
     </a>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false">Menu</button>
+    <button class="nav-toggle" id="navToggle" aria-label="${s.menu}" aria-expanded="false">${s.menu}</button>
     <nav class="nav" id="siteNav">
-      <a class="nav-link" href="/#packs">Packs</a>
-      <a class="nav-link" href="/#niches">Niches</a>
-      <a class="nav-link" href="/#configurateur">Commander</a>
-      <a class="nav-link" href="/#process">Process</a>
-      <a class="nav-link" href="/#faq">FAQ</a>
-      <a class="nav-link" href="/blog/">Blog</a>
-      <a class="nav-link" href="/contact/">Contact</a>
-      <a class="btn btn-primary" href="/#configurateur">Commander ton système</a>
+      <a class="nav-link" href="${base}/#packs">${s.nav.packs}</a>
+      <a class="nav-link" href="${base}/#niches">${s.nav.niches}</a>
+      <a class="nav-link" href="${base}/#configurateur">${s.nav.order}</a>
+      <a class="nav-link" href="${base}/#process">${s.nav.process}</a>
+      <a class="nav-link" href="${base}/#faq">${s.nav.faq}</a>
+      <a class="nav-link" href="${base}/blog/">${s.nav.blog}</a>
+      <a class="nav-link" href="${base}/contact/">${s.nav.contact}</a>
+      <a class="nav-link" id="langSwitch" href="${buildAlternatePath(pathname)}" aria-label="${s.langSwitchLabel}">${s.langSwitch}</a>
+      <a class="btn btn-primary" href="${base}/#configurateur">${s.nav.cta}</a>
     </nav>
   </div>
 </header>
 `;
+}
 
-const footerHTML = `
+function footerHTML(pathname) {
+  const lang = isEnglishPath(pathname) ? "en" : "fr";
+  const s = getStrings(lang);
+  const base = getLangPrefix(pathname);
+
+  return `
 <footer class="site-footer">
   <div class="container footer-inner">
-        <p class="muted">© <span id="year"></span> online-affiliate. Tous droits réservés.</p>
+        <p class="muted">© <span id="year"></span> online-affiliate. ${s.footerRights}</p>
         <p class="muted">
-          <a class="link" href="/#configurateur">Commander</a>
+          <a class="link" href="${base}/#configurateur">${s.footer.order}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/#faq">FAQ</a>
+          <a class="link" href="${base}/#faq">${s.footer.faq}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/blog/">Blog</a>
+          <a class="link" href="${base}/blog/">${s.footer.blog}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/contact/">Contact</a>
+          <a class="link" href="${base}/contact/">${s.footer.contact}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/mentions-legales/">Mentions légales</a>
+          <a class="link" href="${base}/mentions-legales/">${s.footer.legal}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/confidentialite/">Confidentialité</a>
+          <a class="link" href="${base}/confidentialite/">${s.footer.privacy}</a>
           <span aria-hidden="true">·</span>
-          <a class="link" href="/conditions/">Conditions</a>
+          <a class="link" href="${base}/conditions/">${s.footer.terms}</a>
         </p>
   </div>
 </footer>
 `;
+}
 
 /**
  * Injects the header and footer into the document.
@@ -60,12 +150,12 @@ export function injectLayout(currentPage = '/') {
   
   // Inject Header
   const headerContainer = document.createElement('div');
-  headerContainer.innerHTML = headerHTML;
+  headerContainer.innerHTML = headerHTML(currentPage);
   body.prepend(headerContainer);
 
   // Inject Footer
   const footerContainer = document.createElement('div');
-  footerContainer.innerHTML = footerHTML;
+  footerContainer.innerHTML = footerHTML(currentPage);
   body.append(footerContainer);
 
   // Set active link
@@ -77,6 +167,13 @@ export function injectLayout(currentPage = '/') {
       link.classList.add('active');
     }
   });
+
+  // Preserve query/hash for language switch.
+  const langSwitch = document.getElementById("langSwitch");
+  if (langSwitch) {
+    const altPath = buildAlternatePath(currentPage);
+    langSwitch.setAttribute("href", `${altPath}${window.location.search || ""}${window.location.hash || ""}`);
+  }
 
   // Handle year in footer
   const yearSpan = document.getElementById('year');

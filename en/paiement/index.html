@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Payment — E-Com Shop</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="description" content="Review your recap and pay your E-Com Shop order via secure payment." />
+    <link rel="canonical" href="https://online-affiliate.com/en/paiement/" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" />
+
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <main id="contenu" class="section">
+      <div class="container">
+        <article class="cfg-card">
+          <p class="badge">Secure payment</p>
+          <h1 style="margin-top: 8px">Review your recap, then pay.</h1>
+          <p class="muted">
+            This payment covers the configured <strong>one‑shot pack</strong>. If you selected an <strong>annual plan</strong>, it’s charged
+            immediately at the same time. The <strong>monthly</strong> subscription (if selected) is set up after the order (we’ll contact
+            you).
+          </p>
+
+          <div class="divider"></div>
+
+          <div id="checkoutEmpty" hidden>
+            <p class="muted">No order detected. Go back to the configurator to build your pack.</p>
+            <a class="btn btn-primary" href="/en/#configurateur">Go to configurator</a>
+          </div>
+
+          <div id="checkoutContent" hidden>
+            <h2 class="h3">Recap</h2>
+            <pre class="cfg-recap" id="checkoutRecap"></pre>
+
+            <div class="cfg-total" style="margin-top: 12px">
+              <div>
+                <div class="muted">Pay now</div>
+                <div class="big" id="checkoutTotal">—</div>
+              </div>
+              <div>
+                <div class="muted">Subscription (if selected)</div>
+                <div class="big" id="checkoutMonthly">—</div>
+              </div>
+            </div>
+
+            <div class="cfg-actions" style="margin-top: 16px">
+              <button type="button" class="btn btn-primary btn-block" id="payBtn">Pay now</button>
+              <a class="btn btn-ghost btn-block" href="/en/#configurateur">Edit my order</a>
+            </div>
+
+            <p class="cfg-note">
+              Payment is processed by a provider (e.g., Stripe). E‑Com Shop never stores your card details.
+            </p>
+            <p class="cfg-note">
+              Need something outside the pack? <a class="link" href="/en/contact/">Special request</a>.
+            </p>
+          </div>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>
+

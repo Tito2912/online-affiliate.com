@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Affiliate tracking: GA4 + Search Console + UTM (no overkill) — online-affiliate</title>
+    <meta
+      name="description"
+      content="Measure SEO + affiliate clicks simply: Search Console, GA4 events, UTM, naming conventions, KPIs, weekly routine and mistakes to avoid."
+    />
+    <meta
+      name="keywords"
+      content="affiliate tracking, GA4 affiliate, GA4 events, UTM, Search Console, measure affiliate clicks, SEO KPIs, attribution, conversion tracking"
+    />
+    <link rel="canonical" href="https://online-affiliate.com/en/blog/tracking/" />
+    <link rel="alternate" hreflang="fr" href="https://online-affiliate.com/blog/tracking/" />
+    <link rel="alternate" hreflang="en" href="https://online-affiliate.com/en/blog/tracking/" />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="online-affiliate" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content="Affiliate tracking: GA4 + Search Console + UTM (no overkill)" />
+    <meta
+      property="og:description"
+      content="A simple method to measure SEO + affiliate clicks: GA4 events, consistent UTM tags, Search Console, KPIs and an optimization routine."
+    />
+    <meta property="og:url" content="https://online-affiliate.com/en/blog/tracking/" />
+    <meta property="og:image" content="https://online-affiliate.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Affiliate tracking: GA4 + Search Console + UTM (no overkill)" />
+    <meta
+      name="twitter:description"
+      content="Search Console + GA4 events + UTM: measure and optimize an affiliate SEO machine without unnecessary complexity."
+    />
+    <meta name="twitter:image" content="https://online-affiliate.com/assets/og-image.png" />
+
+    <meta name="theme-color" content="#0b0e14" />
+    <meta name="color-scheme" content="dark" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://online-affiliate.com/#organization",
+            "name": "E-Com Shop",
+            "alternateName": "online-affiliate",
+            "url": "https://online-affiliate.com/",
+            "email": "contact.ecomshopfrance@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "60 rue François 1er",
+              "postalCode": "75008",
+              "addressLocality": "Paris",
+              "addressCountry": "FR"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://online-affiliate.com/en/#website",
+            "url": "https://online-affiliate.com/en/",
+            "name": "online-affiliate",
+            "publisher": { "@id": "https://online-affiliate.com/#organization" },
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://online-affiliate.com/en/blog/tracking/#webpage",
+            "url": "https://online-affiliate.com/en/blog/tracking/",
+            "name": "Affiliate tracking: GA4 + Search Console + UTM (no overkill)",
+            "description": "Measure SEO + affiliate clicks simply: Search Console, GA4 events, UTM, naming conventions, KPIs, weekly routine and mistakes to avoid.",
+            "isPartOf": { "@id": "https://online-affiliate.com/en/#website" },
+            "about": { "@id": "https://online-affiliate.com/#organization" },
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "Article",
+            "@id": "https://online-affiliate.com/en/blog/tracking/#article",
+            "headline": "Affiliate tracking: GA4 + Search Console + UTM (no overkill)",
+            "description": "Measure SEO + affiliate clicks simply: Search Console, GA4 events, UTM, naming conventions, KPIs, weekly routine and mistakes to avoid.",
+            "image": "https://online-affiliate.com/assets/og-image.png",
+            "author": { "@id": "https://online-affiliate.com/#organization" },
+            "publisher": { "@id": "https://online-affiliate.com/#organization" },
+            "datePublished": "2026-04-08",
+            "dateModified": "2026-04-11",
+            "mainEntityOfPage": { "@id": "https://online-affiliate.com/en/blog/tracking/#webpage" },
+            "inLanguage": "en-US"
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://online-affiliate.com/en/blog/tracking/#breadcrumbs",
+            "itemListElement": [
+              { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://online-affiliate.com/en/" },
+              { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://online-affiliate.com/en/blog/" },
+              { "@type": "ListItem", "position": 3, "name": "Tracking", "item": "https://online-affiliate.com/en/blog/tracking/" }
+            ]
+          }
+        ]
+      }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" />
+
+    <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+
+    <script type="module" src="/assets/main.js"></script>
+  </head>
+  <body data-page="blog-tracking">
+    <div id="particles-js"></div>
+    <main id="contenu" class="section">
+      <div class="container">
+        <article class="cfg-card prose">
+          <p class="muted" style="margin: 0 0 8px; font-size: 13px">
+            <a class="link" href="/en/blog/">Blog</a> <span aria-hidden="true">·</span> Tracking
+          </p>
+          <h1 style="margin-top: 0">Affiliate tracking: GA4 + Search Console + UTM (no overkill)</h1>
+          <p class="muted" style="margin-top: 0">Last updated: April 11, 2026.</p>
+
+          <p>
+            Tracking isn’t there to “look pro”. It’s there to keep you from working blindly.
+          </p>
+          <p>
+            In SEO + affiliate marketing, you want answers to three questions:
+          </p>
+          <ul class="bullets">
+            <li>Which pages bring traffic (impressions, clicks)?</li>
+            <li>Which pages generate affiliate clicks?</li>
+            <li>Which programs/products truly convert (when you have the data)?</li>
+          </ul>
+
+          <div class="panel" style="margin-top: 14px">
+            <p class="muted" style="margin: 0">
+              <strong>Also read:</strong>
+              <a class="link" href="/en/blog/contenu/">content that converts</a>
+              <span aria-hidden="true">·</span>
+              <a class="link" href="/en/blog/programmes/">affiliate programs</a>
+              <span aria-hidden="true">·</span>
+              <a class="link" href="/en/blog/seo/">SEO guide</a>
+              <span aria-hidden="true">·</span>
+              <a class="link" href="/en/blog/refresh-seo/">SEO refresh</a>
+            </p>
+          </div>
+
+          <div class="divider"></div>
+
+          <h2 id="toc">Table of contents</h2>
+          <ul class="bullets">
+            <li><a class="link" href="#minimum">1) Minimum setup (in 30 minutes)</a></li>
+            <li><a class="link" href="#utm">2) UTM naming convention (simple + durable)</a></li>
+            <li><a class="link" href="#events">3) Measure affiliate clicks in GA4</a></li>
+            <li><a class="link" href="#kpi">4) Useful KPIs (the ones that help you decide)</a></li>
+            <li><a class="link" href="#routine">5) Weekly routine (optimize without stress)</a></li>
+            <li><a class="link" href="#erreurs">6) Common mistakes</a></li>
+          </ul>
+
+          <div class="divider"></div>
+
+          <h2 id="minimum">1) Minimum setup (in 30 minutes)</h2>
+          <p>
+            You can track without an overengineered setup. The minimum viable stack:
+          </p>
+          <ul class="bullets">
+            <li><strong>Google Search Console</strong>: impressions, clicks, CTR, queries, indexing.</li>
+            <li><strong>GA4</strong>: behavior (pages, engagement) + events (affiliate clicks).</li>
+          </ul>
+          <p class="muted">
+            If you don’t have your foundations yet, start here. The rest (advanced dashboards, BI, etc.) comes later.
+          </p>
+
+          <h2 id="utm">2) UTM naming convention (simple + durable)</h2>
+          <p>
+            UTM tags enrich outgoing links. Use them to distinguish the program, the page type, and the link placement.
+          </p>
+          <p>
+            Example of a simple convention (adapt as needed):
+          </p>
+          <ul class="bullets">
+            <li><strong>utm_source</strong> = program (e.g., <code>amazon</code>, <code>awin</code>, <code>partnerX</code>)</li>
+            <li><strong>utm_medium</strong> = <code>affiliate</code></li>
+            <li><strong>utm_campaign</strong> = page type (e.g., <code>comparison</code>, <code>review</code>, <code>hub</code>)</li>
+            <li><strong>utm_content</strong> = placement (e.g., <code>table_top</code>, <code>cta_bottom</code>, <code>inline_1</code>)</li>
+          </ul>
+          <p class="muted">
+            The goal isn’t 40 parameters. The goal is consistency so you can compare.
+          </p>
+
+          <h2 id="events">3) Measure affiliate clicks in GA4</h2>
+          <p>
+            You can measure an affiliate click as an event (e.g., <code>affiliate_click</code>). The idea:
+          </p>
+          <ul class="bullets">
+            <li>Fire the event on every click on an affiliate link.</li>
+            <li>Add useful parameters (program, page type, link position).</li>
+            <li>Don’t multiply events (1 event + parameters &gt; 10 different events).</li>
+          </ul>
+          <p>
+            Useful parameters (examples):
+          </p>
+          <ul class="bullets">
+            <li><strong>affiliate_program</strong>: the program (or network)</li>
+            <li><strong>page_type</strong>: comparison / review / hub</li>
+            <li><strong>link_position</strong>: table_top / cta_bottom / inline</li>
+          </ul>
+          <p class="muted">
+            GDPR: this guide is not legal advice. The important part is transparency (legal pages, disclosure) and keeping tracking to what’s
+            necessary.
+          </p>
+
+          <h2 id="kpi">4) Useful KPIs (the ones that help you decide)</h2>
+          <p>
+            Useful KPIs are the ones that lead to an action. A few very concrete examples:
+          </p>
+          <ul class="bullets">
+            <li><strong>CTR (GSC)</strong>: impressions but few clicks → improve title/meta.</li>
+            <li><strong>Average position (GSC)</strong>: pages in 8–20 → prioritize refresh + internal linking.</li>
+            <li><strong>Affiliate clicks (GA4)</strong>: money pages with zero clicks → improve verdict, table, CTA.</li>
+            <li><strong>Click distribution</strong>: if 80% of clicks come from one block → replicate that pattern.</li>
+          </ul>
+
+          <h2 id="routine">5) Weekly routine (optimize without stress)</h2>
+          <p>
+            A simple routine (30–60 min/week):
+          </p>
+          <ol class="bullets" style="list-style: decimal; padding-left: 18px">
+            <li>GSC: spot 5 pages trending up (impressions ↑) and 5 pages in 8–20.</li>
+            <li>On those pages: improve title/intro, clarify the verdict, add 3 internal links.</li>
+            <li>GA4: review money pages with 0 affiliate clicks → fix table/CTA.</li>
+            <li>Write 1 support page that strengthens a money page.</li>
+          </ol>
+          <p class="muted">
+            The secret isn’t publishing “a lot”. It’s publishing, linking, measuring, improving—without breaking consistency.
+          </p>
+
+          <h2 id="erreurs">6) Common mistakes</h2>
+          <ul class="bullets">
+            <li><strong>Inconsistent UTM tags</strong>: you can’t compare, so you optimize by gut feeling.</li>
+            <li><strong>Too many events</strong>: you get lost (1 event + parameters is often enough).</li>
+            <li><strong>Double counting</strong>: click tracking + poorly handled redirects.</li>
+            <li><strong>No feedback loop</strong>: measuring without acting is useless.</li>
+          </ul>
+
+          <div class="divider"></div>
+
+          <h2>Conclusion</h2>
+          <p>
+            If your tracking helps you identify which pages deserve a refresh and which blocks generate clicks, you already have 80% of the
+            system.
+          </p>
+          <p>
+            Want me to set up the foundations (GA4/GSC + click tracking + structure) so you can start clean?
+            <a class="link" href="/en/#configurateur">Build your pack</a>.
+          </p>
+
+          <p class="muted" style="font-size: 13px; margin: 18px 0 0">
+            <a class="link" href="#toc">Back to table of contents</a>
+          </p>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>
