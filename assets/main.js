@@ -96,6 +96,10 @@ const I18N = {
 
 const S = I18N[UI_LANG] || I18N.fr;
 
+const GA4_MEASUREMENT_ID = "G-JCTBP1B2SQ";
+const ANALYTICS_CONSENT_KEY = "oa_analytics_consent_v1";
+let ga4Loaded = false;
+
 function trackEvent(eventName, params = {}) {
   const cleanParams = params && typeof params === "object" ? params : {};
 
@@ -110,11 +114,192 @@ function trackEvent(eventName, params = {}) {
       window.plausible(eventName, { props: cleanParams });
     }
   } catch {}
+}
+
+function getStoredConsent() {
+  try {
+    const v = localStorage.getItem(ANALYTICS_CONSENT_KEY);
+    return v === "granted" || v === "denied" ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredConsent(value) {
+  try {
+    localStorage.setItem(ANALYTICS_CONSENT_KEY, value);
+  } catch {}
+}
+
+function deleteCookieEverywhere(name) {
+  const safeName = String(name || "").trim();
+  if (!safeName) return;
+  const host = window.location.hostname;
+  const parts = host.split(".").filter(Boolean);
+  const candidates = [];
+
+  // exact host + parent domains
+  for (let i = 0; i < parts.length; i += 1) {
+    candidates.push(parts.slice(i).join("."));
+  }
+
+  const domainStrings = new Set(["", ...candidates.map((d) => `; domain=${d}`)]);
+
+  for (const domain of domainStrings) {
+    document.cookie = `${safeName}=; Max-Age=0; path=/${domain}`;
+  }
+}
+
+function disableGA4() {
+  if (!GA4_MEASUREMENT_ID) return;
+  try {
+    window[`ga-disable-${GA4_MEASUREMENT_ID}`] = true;
+  } catch {}
 
   try {
-    if (!Array.isArray(window.dataLayer)) window.dataLayer = [];
-    window.dataLayer.push({ event: eventName, ...cleanParams });
+    const names = document.cookie
+      .split(";")
+      .map((c) => String(c).split("=")[0].trim())
+      .filter((n) => n && n.startsWith("_ga"));
+
+    for (const name of new Set(names)) {
+      deleteCookieEverywhere(name);
+    }
   } catch {}
+}
+
+function getSanitizedLocation() {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete("session_id");
+    return url.toString();
+  } catch {
+    return `${window.location.origin}${window.location.pathname}`;
+  }
+}
+
+function loadGA4() {
+  if (!GA4_MEASUREMENT_ID) return;
+  if (ga4Loaded) return;
+  ga4Loaded = true;
+
+  try {
+    window[`ga-disable-${GA4_MEASUREMENT_ID}`] = false;
+  } catch {}
+
+  if (!document.querySelector(`script[data-ga4="${GA4_MEASUREMENT_ID}"]`)) {
+    const gaScript = document.createElement("script");
+    gaScript.async = true;
+    gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA4_MEASUREMENT_ID)}`;
+    gaScript.dataset.ga4 = GA4_MEASUREMENT_ID;
+    document.head.appendChild(gaScript);
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag =
+    window.gtag ||
+    function gtag() {
+      window.dataLayer.push(arguments);
+    };
+
+  window.gtag("js", new Date());
+  window.gtag("config", GA4_MEASUREMENT_ID, {
+    page_location: getSanitizedLocation(),
+    allow_google_signals: false,
+    allow_ad_personalization_signals: false,
+  });
+}
+
+function getConsentStrings(lang) {
+  if (lang === "en") {
+    return {
+      title: "Cookies",
+      text: "We use Google Analytics (GA4) to measure traffic and improve the site. You can accept or decline.",
+      accept: "Accept",
+      decline: "Decline",
+      learn: "Privacy policy",
+    };
+  }
+
+  return {
+    title: "Cookies",
+    text: "Nous utilisons Google Analytics (GA4) pour mesurer l’audience et améliorer le site. Tu peux accepter ou refuser.",
+    accept: "Accepter",
+    decline: "Refuser",
+    learn: "Politique de confidentialité",
+  };
+}
+
+function setupAnalyticsConsent() {
+  if (!GA4_MEASUREMENT_ID) return;
+
+  const stored = getStoredConsent();
+  if (stored === "granted") loadGA4();
+  if (stored === "denied") disableGA4();
+
+  const strings = getConsentStrings(UI_LANG);
+  const policyHref = `${BASE_PREFIX}/confidentialite/#cookies`;
+
+  let banner = document.getElementById("cookieBanner");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.className = "cookie-banner";
+    banner.id = "cookieBanner";
+    banner.setAttribute("role", "dialog");
+    banner.setAttribute("aria-live", "polite");
+    banner.hidden = true;
+
+    banner.innerHTML = `
+      <div class="cookie-banner-inner">
+        <div class="cookie-banner-text">
+          <p class="cookie-banner-title"><strong>${strings.title}</strong></p>
+          <p class="cookie-banner-desc">
+            ${strings.text}
+            <a class="link" href="${policyHref}">${strings.learn}</a>.
+          </p>
+        </div>
+        <div class="cookie-banner-actions">
+          <button type="button" class="btn btn-primary" data-action="accept">${strings.accept}</button>
+          <button type="button" class="btn btn-ghost" data-action="decline">${strings.decline}</button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(banner);
+
+    banner.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-action]");
+      if (!btn) return;
+      const action = btn.getAttribute("data-action");
+
+      if (action === "accept") {
+        setStoredConsent("granted");
+        loadGA4();
+        trackEvent("analytics_consent", { value: "granted", lang: UI_LANG });
+        banner.hidden = true;
+        return;
+      }
+
+      if (action === "decline") {
+        setStoredConsent("denied");
+        disableGA4();
+        banner.hidden = true;
+      }
+    });
+  }
+
+  const prefsLink = document.getElementById("cookiePrefs");
+  if (prefsLink && !prefsLink.dataset.bound) {
+    prefsLink.dataset.bound = "true";
+    prefsLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      banner.hidden = false;
+    });
+  }
+
+  if (stored !== "granted" && stored !== "denied") {
+    banner.hidden = false;
+  }
 }
 
 function moneyEUR(amount) {
@@ -1212,6 +1397,7 @@ function setupResponsiveTables() {
 }
 
 function main() {
+  setupAnalyticsConsent();
   setupNav();
   setupScrollAnimations();
   setupResponsiveTables();

@@ -41,6 +41,7 @@ function getStrings(lang) {
         legal: "Legal notice",
         privacy: "Privacy",
         terms: "Terms",
+        cookies: "Cookies",
       },
       langSwitch: "FR",
       langSwitchLabel: "Version française",
@@ -69,6 +70,7 @@ function getStrings(lang) {
       legal: "Mentions légales",
       privacy: "Confidentialité",
       terms: "Conditions",
+      cookies: "Cookies",
     },
     langSwitch: "EN",
     langSwitchLabel: "English version",
@@ -128,6 +130,8 @@ function footerHTML(pathname) {
           <a class="link" href="${base}/confidentialite/">${s.footer.privacy}</a>
           <span aria-hidden="true">·</span>
           <a class="link" href="${base}/conditions/">${s.footer.terms}</a>
+          <span aria-hidden="true">·</span>
+          <a class="link" href="#" id="cookiePrefs">${s.footer.cookies}</a>
         </p>
   </div>
 </footer>

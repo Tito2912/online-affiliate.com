@@ -206,6 +206,13 @@
                   <td>Netlify / hébergeur</td>
                   <td>Selon politiques de l’hébergeur</td>
                 </tr>
+                <tr>
+                  <td>Mesure d’audience (si acceptée)</td>
+                  <td>Pages vues, événements (ex. démarrage de paiement), navigateur/appareil, localisation approximative</td>
+                  <td>Mesurer l’audience et améliorer le site</td>
+                  <td>Google (Google Analytics 4)</td>
+                  <td>Selon configuration GA4</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -292,8 +299,21 @@
 
           <h2 class="h3" id="cookies">11) Cookies</h2>
           <p class="muted">
-            Le site n’installe pas volontairement de cookies marketing. Certains services tiers (hébergement, analytics si activé) peuvent
-            déposer des traceurs selon leur configuration.
+            Nous n’installons pas de cookies marketing. La mesure d’audience est <strong>optionnelle</strong> et dépend de ton choix.
+          </p>
+          <ul class="bullets">
+            <li><strong>Outil :</strong> Google Analytics 4 (GA4), pour mesurer la fréquentation et améliorer le site.</li>
+            <li><strong>Base légale :</strong> consentement (aucun tag GA4 n’est chargé avant acceptation).</li>
+            <li>
+              <strong>Données mesurées (exemples) :</strong> pages consultées, événements (ex. démarrage de paiement), informations techniques
+              (navigateur/appareil) et localisation approximative.
+            </li>
+            <li><strong>Traceurs/cookies possibles :</strong> <code>_ga</code>, <code>_ga_*</code> (identifiants analytics).</li>
+            <li><strong>Modifier ton choix :</strong> bannière lors de la première visite, puis lien <strong>“Cookies”</strong> dans le footer.</li>
+          </ul>
+          <p class="muted">
+            Si tu refuses, GA4 n’est pas chargé (et les cookies <code>_ga*</code> sont supprimés quand c’est possible). Ton choix est stocké
+            dans ton navigateur (localStorage).
           </p>
         </article>
       </div>
